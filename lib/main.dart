@@ -9,15 +9,47 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.deepPurple,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      home: Home(/*title: 'Flutter Demo Home Page'*/),
     );
   }
 }
+
+class Home extends StatefulWidget{
+  @override
+  State<StatefulWidget> createState() {
+    return _HomeState();
+  }
+
+
+}
+
+class _HomeState extends State<Home>{
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('page 1')),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: 0,
+        items: [
+          BottomNavigationBarItem(icon: new Icon(Icons.home), title: new Text('home')),      ///Главное окно с вводом информации
+          BottomNavigationBarItem(icon: new Icon(Icons.calendar_today) ,title: new Text('calendar')),   /// статистика по дням
+          BottomNavigationBarItem(icon: new Icon(Icons.account_box),title: new Text('statistic'))     ///
+        ],
+      ),
+
+
+
+    );
+  }
+
+}
+
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
