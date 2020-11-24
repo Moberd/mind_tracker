@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
       home: Home(/*title: 'Flutter Demo Home Page'*/),
     );
   }
-}
+} ///Если бог есть это сработает
 
 class Home extends StatefulWidget{
   @override
