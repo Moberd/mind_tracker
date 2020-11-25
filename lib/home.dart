@@ -16,7 +16,7 @@ class Home extends StatefulWidget {
 /// Думаю, будет проще написать по классу на каждую страницу, чем пытаться сделать один общий шаблон под разные параметы.
 ///
 class _HomeState extends State<Home> {
-  int _currentIndex = 0;
+  int _currentIndex = 1;
   final List<Widget> _children = [
     PlaceHolderWidget(Colors.white),
     PlaceHolderWidget(Colors.grey),
@@ -27,24 +27,28 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('page 1')),
+      appBar: AppBar(title: Text('page 1')), ///Закомментируйте эту строку, когда создадите нормальные окна приложения
       body: _children[_currentIndex],
 
       bottomNavigationBar: BottomNavigationBar(
         onTap: onTabTapped,
         currentIndex: _currentIndex,
         items: [
-          BottomNavigationBarItem(
-              icon: new Icon(Icons.home), title: new Text('home')),
 
-          ///Главное окно с вводом информации
+          ///Календарь со статистикой
           BottomNavigationBarItem(
               icon: new Icon(Icons.calendar_today),
-              title: new Text('calendar')),
+              label: 'calendar'),
+
+          ///Главный экран с вводом информации
+          BottomNavigationBarItem(
+              icon: new Icon(Icons.home),
+              label: 'home'),
 
           /// статистика по дням
           BottomNavigationBarItem(
-              icon: new Icon(Icons.account_box), title: new Text('statistic'))
+              icon: new Icon(Icons.account_box),
+              label: 'statistic')
 
           ///
         ],
