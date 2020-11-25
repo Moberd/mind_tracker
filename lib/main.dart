@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
-
 import 'home.dart';
-
-
-///всю реализацию убрал в Home и PlaceHolder
 
 void main() {
   runApp(MyApp());

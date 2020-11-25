@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mind_tracker/main_window_widget.dart';
 import 'package:mind_tracker/placeholder_widget.dart';
-
 import 'calendar_window_widget.dart';
 
 class Home extends StatefulWidget {
@@ -22,7 +22,7 @@ class _HomeState extends State<Home> {
   final List<Widget> _children = [
     ///PlaceHolderWidget(Colors.white),
     CalendarWindowWidget(),
-    PlaceHolderWidget(Colors.grey),
+    MainWindowWidget(),
     PlaceHolderWidget(Colors.orange)
   ];
 
@@ -30,7 +30,7 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('page ')), ///Закомментируйте эту строку, когда создадите нормальные окна приложения
+      //appBar: AppBar(title: Text('page 1')), ///Закомментируйте эту строку, когда создадите нормальные окна приложения
       body: _children[_currentIndex],
 
       bottomNavigationBar: BottomNavigationBar(
@@ -41,19 +41,17 @@ class _HomeState extends State<Home> {
           ///Календарь со статистикой
           BottomNavigationBarItem(
               icon: new Icon(Icons.calendar_today),
-              label: 'calendar'),
+              label: 'Calendar'),
 
           ///Главный экран с вводом информации
           BottomNavigationBarItem(
               icon: new Icon(Icons.home),
-              label: 'home'),
+              label: 'Home'),
 
-          /// статистика по дням
+          /// социальная часть
           BottomNavigationBarItem(
               icon: new Icon(Icons.account_box),
-              label: 'statistic')
-
-          ///
+              label: 'Share')
         ],
       ),
     );
