@@ -14,6 +14,7 @@ class CalendarWindowWidget extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xFFFEF9FF),
       body: new Column(
         children: [
          CalendarDatePicker( ///Не уверен, как тут выделить дни для обозначения о каком дне есть информация
