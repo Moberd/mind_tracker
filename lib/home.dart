@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mind_tracker/placeholder_widget.dart';
 
+import 'calendar_window_widget.dart';
+
 class Home extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
@@ -18,7 +20,8 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   int _currentIndex = 1;
   final List<Widget> _children = [
-    PlaceHolderWidget(Colors.white),
+    ///PlaceHolderWidget(Colors.white),
+    CalendarWindowWidget(),
     PlaceHolderWidget(Colors.grey),
     PlaceHolderWidget(Colors.orange)
   ];
@@ -27,7 +30,7 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('page 1')), ///Закомментируйте эту строку, когда создадите нормальные окна приложения
+      appBar: AppBar(title: Text('page ')), ///Закомментируйте эту строку, когда создадите нормальные окна приложения
       body: _children[_currentIndex],
 
       bottomNavigationBar: BottomNavigationBar(
