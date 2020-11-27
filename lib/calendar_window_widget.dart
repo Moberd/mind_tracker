@@ -12,6 +12,7 @@ class CalendarWindowWidget extends StatelessWidget {
 
   CalendarWindowWidget();
 
+  //TODO Доделать функцию отображения избранных дней.
   bool _isEven(DateTime a) {
     if (a.day < DateTime.now().day)
       return true;
@@ -53,12 +54,16 @@ class CalendarWindowWidget extends StatelessWidget {
               new Padding(
                   padding: EdgeInsets.only(top: 5.0),
                   child: new Text('Что ты тут делаешь?')),
+              Expanded(
+                  child: new Padding(
+                      padding: EdgeInsets.only(top: 5.0),
+                      child: new SimpleTimeSeriesChart.withSampleData()))
             ], //children
           ),
         ));
   }
 }
-
+//TODO Проработать отображение страницы с дневной информацией
 class DayStatisticPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -68,14 +73,17 @@ class DayStatisticPage extends StatelessWidget {
       ),
       body: Center(
         child: new SimpleTimeSeriesChart.withSampleData(),
-
-
       ),
     );
   }
 }
 
 ///Функция используется как демонстрация и в будущем должна быть заменена на функцию, возвращающую, имеются ли записи за день
+
+//TODO Исправить код генерации графика
+//TODO Исправить отображение графика
+
+
 
 class SimpleTimeSeriesChart extends StatelessWidget {
   final List<charts.Series> seriesList;
@@ -103,7 +111,6 @@ class SimpleTimeSeriesChart extends StatelessWidget {
       dateTimeFactory: const charts.LocalDateTimeFactory(),
     );
   }
-
 
   /// Create one series with sample hard coded data.
   static List<charts.Series<TimeSeriesSales, DateTime>> _createSampleData() {
