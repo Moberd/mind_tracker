@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:mind_tracker/main_window_widget.dart';
 import 'package:mind_tracker/placeholder_widget.dart';
 import 'calendar_window_widget.dart';
+import 'share_window_widget.dart';
+
 
 class Home extends StatefulWidget {
   @override
@@ -23,7 +25,7 @@ class _HomeState extends State<Home> {
     ///PlaceHolderWidget(Colors.white),
     CalendarWindowWidget(),
     MainWindowWidget(),
-    PlaceHolderWidget(Colors.orange)
+    ShareWindowWidget(),
   ];
 
 
