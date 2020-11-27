@@ -1,12 +1,11 @@
 ///Правый экрас с возможностью поделиться и записями друзей
-
-
 import 'package:flutter/material.dart';
 
 class ShareWindowWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: FriendsList(),
     );
   }

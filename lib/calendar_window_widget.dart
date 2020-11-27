@@ -1,7 +1,5 @@
 ///правый экран с календарем и статистикой
-
 import 'package:flutter/material.dart';
-import 'package:mind_tracker/placeholder_widget.dart';
 
 class CalendarWindowWidget extends StatelessWidget {
   /// Год окончания должен быть больше года начала, иначе ошибка,
@@ -11,6 +9,20 @@ class CalendarWindowWidget extends StatelessWidget {
   final int _yearOfEndingOfApp = 2021;
 
   CalendarWindowWidget();
+
+  bool _isEven(DateTime a){
+    if (a.day < DateTime.now().day)
+      return true;
+    else
+      return false;
+  }
+
+  void startDayStatisticPage(BuildContext context) {
+
+    Navigator.push(context, MaterialPageRoute(builder: (context) => DayStatisticPage())
+      ,);
+
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,8 +40,8 @@ class CalendarWindowWidget extends StatelessWidget {
                 lastDate: DateTime(_yearOfEndingOfApp),
 
                 ///Нужно новое окно с выводом информации по дню.
-                onDateChanged: (value) => { runApp(PlaceHolderWidget(Colors.lime))},
-                selectableDayPredicate: isEven,
+                onDateChanged: (value) => {startDayStatisticPage(context)},
+               /// selectableDayPredicate: _isEven,
 
                 ///Тут должно быть вызвано окно с информацией по дню
                 currentDate: DateTime.now(),
@@ -45,10 +57,26 @@ class CalendarWindowWidget extends StatelessWidget {
   }
 }
 
-///Функция используется как демонстрация и в будущем должна быть заменена на функцию, возвращающую, имеются ли записи за день
-bool isEven(DateTime a){
-  if (a.day%2==0)
-    return true;
-  else
-    return false;
+class DayStatisticPage extends StatelessWidget{
+
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Second Route"),
+      ),
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: Text('Go back!'),
+        ),
+      ),
+    );
+  }
 }
+
+///Функция используется как демонстрация и в будущем должна быть заменена на функцию, возвращающую, имеются ли записи за день
+

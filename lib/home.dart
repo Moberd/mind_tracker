@@ -1,7 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mind_tracker/main_window_widget.dart';
-import 'package:mind_tracker/placeholder_widget.dart';
+
 import 'calendar_window_widget.dart';
 import 'share_window_widget.dart';
 
