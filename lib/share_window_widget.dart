@@ -32,6 +32,7 @@ class _FriendsListState extends State<FriendsList> {
               IconButton(
                 icon: const Icon(Icons.add_alert),
                 iconSize: 40,
+                onPressed: ()=>{},
               ),
             ]
         ),
