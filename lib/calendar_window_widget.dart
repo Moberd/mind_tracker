@@ -7,8 +7,12 @@ class CalendarWindowWidget extends StatelessWidget {
   /// Год окончания должен быть больше года начала, иначе ошибка,
   /// даже при одиом годе
 
-  final int _yearOfBeginningOfApp = 2020;
-  final int _yearOfEndingOfApp = 2021;
+  ///Если месяц - январь, календарь отработает ПРАВИЛЬНО
+  final DateTime _beginningOfCalendar =
+      new DateTime(DateTime.now().year, DateTime.now().month - 1, 1);
+
+  final DateTime _endingOfCalendar = new DateTime(
+      DateTime.now().year, DateTime.now().month, DateTime.now().day);
 
   CalendarWindowWidget();
 
@@ -35,26 +39,21 @@ class CalendarWindowWidget extends StatelessWidget {
           padding: EdgeInsets.all(20.0),
           child: new Column(
             children: [
-              CalendarDatePicker(
-                ///Не уверен, как тут выделить дни для обозначения о каком дне есть информация
-                ///Возможно, календарь придется менять
-                initialDate: DateTime.now(),
-                firstDate: DateTime(_yearOfBeginningOfApp),
-                lastDate: DateTime(_yearOfEndingOfApp),
+              Flexible(
+                flex: 2,
+                child: CalendarDatePicker(
+                  initialDate: DateTime.now(),
+                  firstDate: _beginningOfCalendar,
+                  lastDate: _endingOfCalendar,
+                  onDateChanged: (value) => {startDayStatisticPage(context)},
 
-                ///Нужно новое окно с выводом информации по дню.
-                onDateChanged: (value) => {startDayStatisticPage(context)},
-
-                /// selectableDayPredicate: _isEven,
-
-                ///Тут должно быть вызвано окно с информацией по дню
-                currentDate: DateTime.now(),
-                initialCalendarMode: DatePickerMode.day,
+                  /// selectableDayPredicate: _isEven,
+                  currentDate: DateTime.now(),
+                  initialCalendarMode: DatePickerMode.day,
+                ),
               ),
-              new Padding(
-                  padding: EdgeInsets.only(top: 5.0),
-                  child: new Text('Что ты тут делаешь?')),
-              Expanded(
+              Flexible(
+                  flex: 1,
                   child: new Padding(
                       padding: EdgeInsets.only(top: 5.0),
                       child: new SimpleTimeSeriesChart.withSampleData()))
@@ -63,6 +62,7 @@ class CalendarWindowWidget extends StatelessWidget {
         ));
   }
 }
+
 //TODO Проработать отображение страницы с дневной информацией
 class DayStatisticPage extends StatelessWidget {
   @override
@@ -83,8 +83,6 @@ class DayStatisticPage extends StatelessWidget {
 //TODO Исправить код генерации графика
 //TODO Исправить отображение графика
 
-
-
 class SimpleTimeSeriesChart extends StatelessWidget {
   final List<charts.Series> seriesList;
   final bool animate;
@@ -95,6 +93,15 @@ class SimpleTimeSeriesChart extends StatelessWidget {
   factory SimpleTimeSeriesChart.withSampleData() {
     return new SimpleTimeSeriesChart(
       _createSampleData(),
+      // Disable animations for image tests.
+      animate: false,
+    );
+  }
+
+  /// Creates a [TimeSeriesChart] with sample data and no transition.
+  factory SimpleTimeSeriesChart.withSampleData2() {
+    return new SimpleTimeSeriesChart(
+      _createSampleData2(),
       // Disable animations for image tests.
       animate: false,
     );
@@ -129,6 +136,24 @@ class SimpleTimeSeriesChart extends StatelessWidget {
         measureFn: (TimeSeriesSales sales, _) => sales.sales,
         data: data,
       )
+    ];
+  }
+
+  /// Create one series with sample hard coded data.
+  static List<charts.Series<TimeSeriesSales, DateTime>> _createSampleData2() {
+    final data = [
+      new TimeSeriesSales(new DateTime(2020, 11, 19), 7),
+      new TimeSeriesSales(new DateTime(2020, 11, 26), 5),
+      new TimeSeriesSales(new DateTime(2020, 11, 3), 10),
+      new TimeSeriesSales(new DateTime(2020, 11, 10), 4),
+    ];
+
+    return [
+      new charts.Series(
+          id: 'Sales',
+          data: data,
+          domainFn: (TimeSeriesSales sales, _) => sales.time,
+          measureFn: (TimeSeriesSales sales, _) => sales.sales)
     ];
   }
 }
