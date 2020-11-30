@@ -38,24 +38,25 @@ class CalendarWindowWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Color(0xFFFEF9FF),
-        body: new Padding(
+        body: Padding(
           padding: EdgeInsets.all(20.0),
-          child: new Column(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Flexible(
-                flex: 2,
+              Expanded(
+                flex: 1,
                 child: CalendarDatePicker(
                   initialDate: DateTime.now(),
                   firstDate: _beginningOfCalendar,
                   lastDate: _endingOfCalendar,
                   onDateChanged: (value) => {startDayStatisticPage(context)},
-
-                  /// selectableDayPredicate: _isEven,
+                  ///selectableDayPredicate: _isEven,
                   currentDate: DateTime.now(),
                   initialCalendarMode: DatePickerMode.day,
                 ),
               ),
-              Flexible(
+              Expanded(
                   flex: 1,
                   child: new Padding(
                       padding: EdgeInsets.only(top: 5.0),

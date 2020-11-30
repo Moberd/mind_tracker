@@ -52,8 +52,6 @@ class _MainWindowWidgetState extends State<MainWindowWidget> {
   }
 }
 
-double digit = 0;
-
 class HowAreYouText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -86,6 +84,8 @@ class _ThoughtBoxContainerState extends State<ThoughtBoxContainer> {
       );
   }
 }
+
+double digit = 0;
 
 class SliderContainer extends StatefulWidget {
   final void Function() touch;
