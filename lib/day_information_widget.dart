@@ -10,7 +10,7 @@ class DayInformationWidget extends StatelessWidget {
   final int _mark;
 
   static final String _defaultMood =
-      "Never gonna give you up\nNever gonna let you down\nNever gonna run around and desert you\nNever gonna make you cry\nNever gonna say goodbye\nNever gonna tell a lie and hurt you";
+      "Never gonna give you up\nNever gonna let you down \nNever gonna run around and desert you\nNever gonna make you cry\nNever gonna say goodbye\nNever gonna tell a lie and hurt you";
 
   DayInformationWidget(this._mood, this._mark, this._date);
 
