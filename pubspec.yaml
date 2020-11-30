@@ -25,9 +25,6 @@ dependencies:
   flutter:
     sdk: flutter
 
-  #localization uses for calendar
-  flutter_localizations:
-    sdk: flutter
 
 
   #charts_flutter 0.9.0

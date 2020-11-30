@@ -30,7 +30,7 @@ class CalendarWindowWidget extends StatelessWidget {
   void startDayStatisticPage(BuildContext context) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => DayInformationWidget()),
+      MaterialPageRoute(builder: (context) => DayInformationWidget.withDefaultParams()),
     );
   }
 

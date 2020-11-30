@@ -2,8 +2,8 @@ import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
 
 class TimeSeriesChart extends StatelessWidget {
-  List<charts.Series> seriesList;
-  bool animate;
+  final List<charts.Series> seriesList;
+  final bool animate;
 
   TimeSeriesChart(this.seriesList, {this.animate});
 
