@@ -2,7 +2,7 @@ import 'package:charts_flutter/flutter.dart' as charts;
 
 ///правый экран с календарем и статистикой
 import 'package:flutter/material.dart';
-import 'package:mind_tracker/time_series_chart.dart';
+import 'package:mind_tracker/statistics/time_series_chart.dart';
 
 import 'day_information_widget.dart';
 
@@ -30,7 +30,8 @@ class CalendarWindowWidget extends StatelessWidget {
   void startDayStatisticPage(BuildContext context) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => DayInformationWidget.withDefaultParams()),
+      MaterialPageRoute(
+          builder: (context) => DayInformationWidget()),
     );
   }
 
@@ -51,6 +52,7 @@ class CalendarWindowWidget extends StatelessWidget {
                   firstDate: _beginningOfCalendar,
                   lastDate: _endingOfCalendar,
                   onDateChanged: (value) => {startDayStatisticPage(context)},
+
                   ///selectableDayPredicate: _isEven,
                   currentDate: DateTime.now(),
                   initialCalendarMode: DatePickerMode.day,
@@ -60,8 +62,7 @@ class CalendarWindowWidget extends StatelessWidget {
                   flex: 1,
                   child: new Padding(
                       padding: EdgeInsets.only(top: 5.0),
-                      child: new TimeSeriesChart.withSampleData())
-              )
+                      child: new TimeSeriesChart.withSampleData()))
             ], //children
           ),
         ));

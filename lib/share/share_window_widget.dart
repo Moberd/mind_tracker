@@ -37,32 +37,39 @@ class _FriendsListState extends State<FriendsList> {
       TextStyle(fontSize: 30.0, color: Color.fromRGBO(0, 0, 0, 1));
   final _mainFont =
       TextStyle(fontSize: 24.0, color: Color.fromRGBO(0, 0, 0, 1));
-  final _dateFont =
-      TextStyle(fontSize: 24.0, color: Colors.deepPurple);
+  final _dateFont = TextStyle(fontSize: 24.0, color: Colors.deepPurple);
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xFFFEF9FF),
         appBar: AppBar(
-          toolbarHeight: 70,
-          backgroundColor: Colors.white,
-          title: Text('Your Name', style: _titleFont),
-          actions: <Widget>[
-            IconButton(
-              onPressed: () => {
-                Scaffold.of(context).showSnackBar(
-                    new SnackBar(content: new Text("Creating QR-CODE (no)")))
-              },
-              color: Colors.black,
-              icon: const Icon(Icons.qr_code_outlined),
-              iconSize: 40,
-            ),
-          ]),
+            toolbarHeight: 70,
+            backgroundColor: Colors.white,
+            title: Text('Your Name', style: _titleFont),
+            actions: <Widget>[
+              IconButton(
+                icon: Icon(Icons.camera_alt_outlined), 
+                color: Colors.black,
+                iconSize: 40,
+                onPressed:() => {
+                  Scaffold.of(context).showSnackBar(
+                      new SnackBar(content: new Text("Opening camera (no)")))
+                },),
+              IconButton(
+                onPressed: () => {
+                  Scaffold.of(context).showSnackBar(
+                      new SnackBar(content: new Text("Creating QR-CODE (no)")))
+                },
+                color: Colors.black,
+                icon: Icon(Icons.qr_code_outlined),
+                iconSize: 40,
+              )
+            ]),
         body: _buildList());
   }
 
   Widget _buildList() {
     int c = 0; //Счётчик вывода дат
     return ListView.builder(
-
         padding: EdgeInsets.all(0.0),
         itemCount: _friends.length + 3,
         itemBuilder: (context, i) {
@@ -71,14 +78,15 @@ class _FriendsListState extends State<FriendsList> {
             //Вывод даты
             c += 1;
             return Padding(
-              padding: const EdgeInsets.only(left: 1,right:1),
+              padding: const EdgeInsets.all(4),
               child: Container(
                   decoration: BoxDecoration(
                     color: Color(0xFFFEF9FF),
-                    border: Border.all(color: Colors.black,width: 1),
+                    //border: Border.all(color: Color(0xFF736CED), width: 1),
+                    //borderRadius: BorderRadius.circular(7)
                   ),
                   child: ListTile(
-                    title: Text('Date', style: _dateFont),
+                    title: Text('Date (last visited)', style: _dateFont),
                   )),
             );
           }
@@ -90,34 +98,34 @@ class _FriendsListState extends State<FriendsList> {
     Icon i;
     switch (mood) {
       case 1:
-        i = Icon(Icons.thumb_down);
+        i = Icon(Icons.thumb_down,color: Colors.deepPurple);
         break;
       case 2:
-        i = Icon(Icons.thumb_down);
+        i = Icon(Icons.thumb_down,color: Colors.deepPurple);
         break;
       case 3:
-        i = Icon(Icons.thumb_down);
+        i = Icon(Icons.thumb_down,color: Colors.deepPurple);
         break;
       case 4:
-        i = Icon(Icons.check);
+        i = Icon(Icons.check,color: Colors.deepPurple);
         break;
       case 5:
-        i = Icon(Icons.check);
+        i = Icon(Icons.check,color: Colors.deepPurple);
         break;
       case 6:
-        i = Icon(Icons.check);
+        i = Icon(Icons.check,color: Colors.deepPurple);
         break;
       case 7:
-        i = Icon(Icons.check);
+        i = Icon(Icons.check,color: Colors.deepPurple);
         break;
       case 8:
-        i = Icon(Icons.thumb_up);
+        i = Icon(Icons.thumb_up,color: Colors.deepPurple);
         break;
       case 9:
-        i = Icon(Icons.thumb_up);
+        i = Icon(Icons.thumb_up,color: Colors.deepPurple);
         break;
       case 10:
-        i = Icon(Icons.thumb_up);
+        i = Icon(Icons.thumb_up,color: Colors.deepPurple);
         break;
       default:
     }
@@ -131,6 +139,4 @@ class _FriendsListState extends State<FriendsList> {
       ),
     );
   }
-
 }
-

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:mind_tracker/main_window_widget.dart';
+import 'package:mind_tracker/rate_day/main_window_widget.dart';
 
-import 'calendar_window_widget.dart';
-import 'share_window_widget.dart';
+import 'statistics/calendar_window_widget.dart';
+import 'share/share_window_widget.dart';
 
 
 class Home extends StatefulWidget {

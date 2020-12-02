@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'home.dart';
+import 'package:flutter/services.dart';
 
 void main() {
+  SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(statusBarColor: Colors.deepPurple // status bar color
+          ));
   runApp(MyApp());
 }
 
