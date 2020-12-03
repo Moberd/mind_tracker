@@ -35,15 +35,13 @@ class DayInformationWidget extends StatelessWidget {
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Flexible(
-                  flex: 1,
                   child: Text(
                     _yourMoodPhrase,
                     style: TextStyle(
                       fontSize: 27,
                       color: Colors.deepPurple,
                     ),
-                  )),
+                  ),
             ),
             SizedBox(),
             Expanded(
