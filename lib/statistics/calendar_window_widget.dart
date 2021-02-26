@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:mind_tracker/statistics/time_series_chart.dart';
 
 import 'day_information_widget.dart';
+import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart';
 
 class CalendarWindowWidget extends StatelessWidget {
   /// Год окончания должен быть больше года начала, иначе ошибка,
@@ -12,7 +13,7 @@ class CalendarWindowWidget extends StatelessWidget {
 
   ///Если месяц - январь, календарь отработает ПРАВИЛЬНО
   final DateTime _beginningOfCalendar =
-      new DateTime(DateTime.now().year, DateTime.now().month - 1, 1);
+      new DateTime(DateTime.now().year, DateTime.now().month - 10, 1);
 
   final DateTime _endingOfCalendar = new DateTime(
       DateTime.now().year, DateTime.now().month, DateTime.now().day);
@@ -46,8 +47,8 @@ class CalendarWindowWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Expanded(
-                flex: 1,
-                child: CalendarDatePicker(
+                flex: 12,
+                child: /*CalendarDatePicker(
                   initialDate: DateTime.now(),
                   firstDate: _beginningOfCalendar,
                   lastDate: _endingOfCalendar,
@@ -56,10 +57,20 @@ class CalendarWindowWidget extends StatelessWidget {
                   ///selectableDayPredicate: _isEven,
                   currentDate: DateTime.now(),
                   initialCalendarMode: DatePickerMode.day,
+                ),*/
+                CalendarCarousel(
+                  locale: 'ru_RU',
+                  daysHaveCircularBorder: true,
+                  maxSelectedDate: _endingOfCalendar,
+                  minSelectedDate: _beginningOfCalendar,
+                  onDayLongPressed: (value) => {startDayStatisticPage(context)},
+                  markedDateShowIcon: true,
+                  //isScrollable: false,
+
                 ),
               ),
               Expanded(
-                  flex: 1,
+                  flex: 10,
                   child: new Padding(
                       padding: EdgeInsets.only(top: 5.0),
                       child: new TimeSeriesChart.withSampleData()))
@@ -67,4 +78,5 @@ class CalendarWindowWidget extends StatelessWidget {
           ),
         ));
   }
+
 }
