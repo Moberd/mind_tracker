@@ -48,7 +48,7 @@ class CalendarWindowWidget extends StatelessWidget {
             children: [
               Expanded(
                 flex: 12,
-                child: /*CalendarDatePicker(
+                child: CalendarDatePicker(
                   initialDate: DateTime.now(),
                   firstDate: _beginningOfCalendar,
                   lastDate: _endingOfCalendar,
@@ -57,8 +57,8 @@ class CalendarWindowWidget extends StatelessWidget {
                   ///selectableDayPredicate: _isEven,
                   currentDate: DateTime.now(),
                   initialCalendarMode: DatePickerMode.day,
-                ),*/
-                CalendarCarousel(
+                ),
+                /*CalendarCarousel(
                   locale: 'ru_RU',
                   daysHaveCircularBorder: true,
                   maxSelectedDate: _endingOfCalendar,
@@ -67,7 +67,7 @@ class CalendarWindowWidget extends StatelessWidget {
                   markedDateShowIcon: true,
                   //isScrollable: false,
 
-                ),
+                ),*/
               ),
               Expanded(
                   flex: 10,

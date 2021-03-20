@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'authorization/authorization_window_widget.dart';
 import 'home.dart';
 import 'package:flutter/services.dart';
 
@@ -20,7 +21,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.deepPurple,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: Home(),
+      home: AuthorizationWindowWidget() ///Home(),
     );
   }
 }

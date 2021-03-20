@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mind_tracker/rate_day/main_window_widget.dart';
 
-import 'statistics/calendar_window_widget.dart';
 import 'share/share_window_widget.dart';
-
+import 'statistics/calendar_window_widget.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -11,6 +10,7 @@ class Home extends StatefulWidget {
     return _HomeState();
   }
 }
+
 /// Сейчас новое окно/страница реализованы через PlaceHolderWidget
 /// их нужно будет переделать под наши цели
 /// не думаю, что это очень сложо
@@ -26,42 +26,39 @@ class _HomeState extends State<Home> {
     ShareWindowWidget(),
   ];
 
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      //appBar: AppBar(title: Text('page 1')), ///Закомментируйте эту строку, когда создадите нормальные окна приложения
-      body: _children[_currentIndex],
+    return WillPopScope(
+        child: Scaffold(
+          //appBar: AppBar(title: Text('page 1')), ///Закомментируйте эту строку, когда создадите нормальные окна приложения
+          body: _children[_currentIndex],
 
-      bottomNavigationBar: BottomNavigationBar(
-        onTap: onTabTapped,
-        currentIndex: _currentIndex,
-        items: [
+          bottomNavigationBar: BottomNavigationBar(
+            onTap: onTabTapped,
+            currentIndex: _currentIndex,
+            items: [
+              ///Календарь со статистикой
+              BottomNavigationBarItem(
+                  icon: new Icon(Icons.calendar_today), label: 'Calendar'),
 
-          ///Календарь со статистикой
-          BottomNavigationBarItem(
-              icon: new Icon(Icons.calendar_today),
-              label: 'Calendar'),
+              ///Главный экран с вводом информации
+              BottomNavigationBarItem(
+                  icon: new Icon(Icons.home), label: 'Home'),
 
-          ///Главный экран с вводом информации
-          BottomNavigationBarItem(
-              icon: new Icon(Icons.home),
-              label: 'Home'),
-
-          /// социальная часть
-          BottomNavigationBarItem(
-              icon: new Icon(Icons.account_box),
-              label: 'Share')
-        ],
-      ),
-    );
+              /// социальная часть
+              BottomNavigationBarItem(
+                  icon: new Icon(Icons.account_box), label: 'Share')
+            ],
+          ),
+        ),
+        onWillPop: () async {
+          return false;
+        });
   }
 
-  void onTabTapped (int index){
+  void onTabTapped(int index) {
     setState(() {
-      _currentIndex=index;
+      _currentIndex = index;
     });
   }
-
 }
-
