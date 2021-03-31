@@ -1,5 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mind_tracker/statistics/day_information_widget.dart';
+
+import '../home.dart';
 
 class RegistrationWindowWidget extends StatefulWidget {
   @override
@@ -40,7 +44,7 @@ https://coderoad.ru/61538657/%D0%9A%D0%B0%D0%BA-%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D
                 //Поле логина
                 TextFormField(
                   controller: loginController,
-                  decoration: new InputDecoration(labelText: "Login"),
+                  decoration: new InputDecoration(labelText: "Email"),
                   keyboardType: TextInputType.emailAddress,
                 ),
 
@@ -111,12 +115,46 @@ https://coderoad.ru/61538657/%D0%9A%D0%B0%D0%BA-%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D
       ),
     );
   }
-
-  //TODO реализуйте регистрацию
-  ///Регистрация
-  void register()
-  {
-        Navigator.pop(context);
+  bool checkPassword(){
+    //TODO проверка паролей
+    return true;
   }
+  //TODO реализуйте регистрацию
+  Future<void>  register()
+  async {
+    if(checkPassword()){
+    try {
+      UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: loginController.text,
+          password: passwordController1.text
+      );
+      CollectionReference users = FirebaseFirestore.instance.collection('users');
+      addUser(users);
+      Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
+
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'weak-password') {
+        print('The password provided is too weak.');
+      } else if (e.code == 'email-already-in-use') {
+        print('The account already exists for that email.');
+      }
+    } catch (e) {
+      print(e);
+    }}
+  }
+  Future<void> addUser(CollectionReference users) {
+    // Call the user's CollectionReference to add a new user
+    return users
+        .add({
+      'email': loginController.text, // John Doe
+      "friends":"",
+    "lastVisited":"",
+    "lastMark":""
+    })
+        .then((value) => print("User Added"))
+        .catchError((error) => print("Failed to add user: $error"));
+  }
+
+
 
 }

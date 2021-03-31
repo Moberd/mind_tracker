@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mind_tracker/authorization/registreation_window_widget.dart';
@@ -15,12 +16,18 @@ class AuthorizationWindowWidgetState extends State<AuthorizationWindowWidget> {
   bool _passwordVisible;
   TextEditingController loginController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-
+  FirebaseAuth auth = FirebaseAuth.instance;
   AuthorizationWindowWidgetState(bool passVis) {
     _passwordVisible = passVis;
   }
 
   Widget build(BuildContext context) {
+    auth.authStateChanges()
+        .listen((User user) {
+      if (user != null) {
+        Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
+      }
+    });
     return WillPopScope(
         onWillPop: () async {
           return false;
@@ -40,7 +47,7 @@ class AuthorizationWindowWidgetState extends State<AuthorizationWindowWidget> {
                     //Поле логина
                     TextFormField(
                       controller: loginController,
-                      decoration: new InputDecoration(labelText: "Login"),
+                      decoration: new InputDecoration(labelText: "Email"),
                       keyboardType: TextInputType.emailAddress,
                     ),
 
@@ -81,7 +88,7 @@ class AuthorizationWindowWidgetState extends State<AuthorizationWindowWidget> {
                       shape: RoundedRectangleBorder(
                           side: BorderSide(color: Colors.transparent),
                           borderRadius:
-                              BorderRadius.all(Radius.circular(10.0))),
+                          BorderRadius.all(Radius.circular(10.0))),
                     )
                   ],
                 ),
@@ -110,7 +117,7 @@ class AuthorizationWindowWidgetState extends State<AuthorizationWindowWidget> {
                               shape: RoundedRectangleBorder(
                                   side: BorderSide(color: Colors.transparent),
                                   borderRadius:
-                                      BorderRadius.all(Radius.circular(10.0))),
+                                  BorderRadius.all(Radius.circular(10.0))),
                             )
                           ],
                         )))
@@ -118,11 +125,17 @@ class AuthorizationWindowWidgetState extends State<AuthorizationWindowWidget> {
             ),
           ),
         ));
+
+
+
   }
 
   //TODO Напишите функцию
   ///Восстановление пароля
-  static void onForgotPassword() {}
+   void onForgotPassword() {
+    auth.sendPasswordResetEmail(email: loginController.text);
+    //TODO тостик по мылу отправлен ссылка на восстановление пароля
+  }
 
   //TODO написать страницу регистрации
   ///Переход на страницу регистрации
@@ -135,7 +148,18 @@ class AuthorizationWindowWidgetState extends State<AuthorizationWindowWidget> {
 
   //TODO добавьте функцию авторизации
   ///Авторизация
-  void login() {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
+  void login() async {
+    try {
+      UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email:loginController.text,
+          password: passwordController.text
+      );
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        print('No user found for that email.');
+      } else if (e.code == 'wrong-password') {
+        print('Wrong password provided for that user.');
+      }
+    }
   }
 }

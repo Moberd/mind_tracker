@@ -15,7 +15,7 @@ class _MainWindowWidgetState extends State<MainWindowWidget> {
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         resizeToAvoidBottomInset: false,
-        resizeToAvoidBottomPadding: false,
+        //resizeToAvoidBottomPadding: false,
         backgroundColor: Color(0xFFFEF9FF),
         body: Center(
           child: Column(
