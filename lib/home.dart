@@ -3,8 +3,11 @@ import 'package:mind_tracker/rate_day/main_window_widget.dart';
 
 import 'share/share_window_widget.dart';
 import 'statistics/calendar_window_widget.dart';
+import 'rate_day/main_window_widget.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Home extends StatefulWidget {
+
   @override
   State<StatefulWidget> createState() {
     return _HomeState();
@@ -19,6 +22,17 @@ class Home extends StatefulWidget {
 /// Думаю, будет проще написать по классу на каждую страницу, чем пытаться сделать один общий шаблон под разные параметы.
 ///
 class _HomeState extends State<Home> {
+  @override
+  void initState(){
+    getData();
+  }
+
+  getData() async { //Получение листа из памяти
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      thoughts_list = prefs.getStringList('thoughts_list') == null? [] : prefs.getStringList('thoughts_list');
+    });
+  }
   int _currentIndex = 1;
   final List<Widget> _children = [
     CalendarWindowWidget(),

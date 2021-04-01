@@ -5,6 +5,7 @@ import 'authorization/authorization_window_widget.dart';
 import 'home.dart';
 import 'package:flutter/services.dart';
 
+
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setSystemUIOverlayStyle(
@@ -16,7 +17,7 @@ void main() {
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   final Future<FirebaseApp> _initialization = Firebase.initializeApp();
-  @override
+
   Widget build(BuildContext context) {
     return FutureBuilder(
       // Initialize FlutterFire:

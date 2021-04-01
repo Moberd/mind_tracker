@@ -1,5 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+
 
 //*основной экран где должен осуществляться ввод данных
 class MainWindowWidget extends StatefulWidget {
@@ -8,6 +13,19 @@ class MainWindowWidget extends StatefulWidget {
 }
 
 class _MainWindowWidgetState extends State<MainWindowWidget> {
+
+  @override
+  void initState(){
+     setData();
+  }
+
+  setData() async { //Сохранение листа в память
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setStringList('thoughts_list', thoughts_list);
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
     final bottom = MediaQuery.of(context).viewInsets.bottom;
@@ -41,7 +59,9 @@ class _MainWindowWidgetState extends State<MainWindowWidget> {
               ),
               Padding(
                 padding: EdgeInsets.only(left: 10, right: 10, bottom: bottom),
-                child: ThoughtBoxContainer(),
+                child: ThoughtBoxContainer(
+                  touch: () => setState(() {}),
+                ),
               ),
               Flexible(
                 child: Padding(
@@ -82,21 +102,28 @@ class ThoughtsList extends StatefulWidget {
 class _ThoughtsListState extends State<ThoughtsList> {
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(itemBuilder: (context, i) {
+    return ListView.builder(itemCount: thoughts_list.length,
+        itemBuilder: (context, i) {
       return Card(
         child: ListTile(
-          title: Text("Never gonna give you up"),
+          //title: Text("Never gonna give you up"),
+          title: Text(thoughts_list[i])
         ),
       );
     });
   }
+
 }
 
 class ThoughtBoxContainer extends StatefulWidget {
+  final void Function() touch;
+  const ThoughtBoxContainer({Key key, this.touch}) : super(key: key);
   @override
   _ThoughtBoxContainerState createState() => _ThoughtBoxContainerState();
 }
 
+final _controller = TextEditingController();
+List<String> thoughts_list = [];
 class _ThoughtBoxContainerState extends State<ThoughtBoxContainer> {
   @override
   Widget build(BuildContext context) {
@@ -105,12 +132,18 @@ class _ThoughtBoxContainerState extends State<ThoughtBoxContainer> {
         labelText: 'Your thoughts today',
         border: OutlineInputBorder(),
       ),
-      onChanged: (value) {
-        setState(() {});
-      },
+      controller: _controller,
+      onFieldSubmitted: (value) {
+        if (value != '') {
+        thoughts_list.add(value);
+        }
+        widget.touch();
+        _controller.clear();
+    }
     );
   }
 }
+
 
 class IconsRow extends StatelessWidget {
   @override
