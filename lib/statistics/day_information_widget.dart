@@ -1,23 +1,43 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mind_tracker/statistics/time_series_chart.dart';
 
-final List<String> _defaultMood = [
-  "Never gonna give you up",
-  "Never gonna let you down",
-  "Never gonna run around and desert you",
-  "Never gonna make you cry",
-  "Never gonna say goodbye",
-  "Never gonna tell a lie and hurt you"
-];
 
 
-class DayInformationWidget extends StatelessWidget {
+
+class DayInformationWidget extends StatefulWidget {
   final String _yourMoodPhrase = "Your thoughts at that day: ";
   final String _yourMarkPhrase = "Your mood mark was";
-  final DateTime _date = DateTime(2020, 12, 1);
-  final List<String> _mood = _defaultMood;
-  final int _mark = 7;
+  DateTime _date ;
+  int _mark = 7;
+  List<String> _myThoughts = [];
+
+  DayInformationWidget(DateTime date,List<String> list,int mark)
+  {
+    _myThoughts = list;
+    _date = _date;
+    mark = mark;
+  }
+
+  @override
+  State<StatefulWidget> createState() {
+    return new DayInformationWidgetState(_date,_myThoughts,_mark);
+  }
+}
+
+class DayInformationWidgetState extends State<DayInformationWidget> {
+  final String _yourMoodPhrase = "Your thoughts at that day: ";
+  final String _yourMarkPhrase = "Your mood mark was";
+  int _mark;
+  List<String> _myThoughts = [];
+  DateTime _date;
+
+  DayInformationWidgetState(DateTime d, List<String> list, int mark) {
+    this._mark = mark;
+    this._myThoughts = list;
+    this._date = d;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,20 +54,20 @@ class DayInformationWidget extends StatelessWidget {
               height: 10,
             ),
             Padding(
-              padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    _yourMoodPhrase,
-                    style: TextStyle(
-                      fontSize: 27,
-                      color: Colors.deepPurple,
-                    ),
-                  ),
+              padding: const EdgeInsets.all(12.0),
+              child: Text(
+                _yourMoodPhrase,
+                style: TextStyle(
+                  fontSize: 27,
+                  color: Colors.deepPurple,
+                ),
+              ),
             ),
             SizedBox(),
             Expanded(
-                flex: 15,
-                child: MyThoughtsList(),
-                ),
+              flex: 15,
+              child: MyThoughtsList(_myThoughts),
+            ),
             Flexible(
                 flex: 1,
                 child: Text(
@@ -69,37 +89,43 @@ class DayInformationWidget extends StatelessWidget {
                   ),
                   alignment: Alignment.center,
                 )
-              ),
-            Flexible(
+            ), //////------------------------------------------------------------------------Тут нужно разобраться почему _date.day возвращает null
+           /* Flexible(
                 flex: 1,
                 child: new Text(
                   "${_date.day}.${_date.month}.${_date.year}",
-                  style: TextStyle(fontSize: 17,color: Color(0xFF736CED)),
-                )),
+                  style: TextStyle(fontSize: 17, color: Color(0xFF736CED)),
+                )),*/
           ],
         ),
       ),
     );
   }
+
 }
 
+// ignore: must_be_immutable
 class MyThoughtsList extends StatefulWidget {
+  List<String> _myThoughts;
+  MyThoughtsList(List<String> l){_myThoughts=l;}
   @override
-  _MyThoughtsListState createState() => _MyThoughtsListState();
+  _MyThoughtsListState createState() => _MyThoughtsListState(_myThoughts);
 }
 
 class _MyThoughtsListState extends State<MyThoughtsList> {
+  List<String> _myThoughts;
+  _MyThoughtsListState(List<String> l){_myThoughts=l;}
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-        itemCount: _defaultMood.length,
+        itemCount: _myThoughts.length,
         itemBuilder: (context, i) {
           return Card(
             child: Padding(
               padding: const EdgeInsets.all(1.0),
               child: ListTile(
                 title: Text(
-                  "${i+1}) " + _defaultMood[i],
+                  "${i+1}) " + _myThoughts[i],
                   style: TextStyle(
                     color: Colors.deepPurple,
                     fontSize: 23,

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -8,6 +9,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 //*основной экран где должен осуществляться ввод данных
 class MainWindowWidget extends StatefulWidget {
+
+
   @override
   _MainWindowWidgetState createState() => _MainWindowWidgetState();
 }
@@ -22,8 +25,11 @@ class _MainWindowWidgetState extends State<MainWindowWidget> {
   setData() async { //Сохранение листа в память
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setStringList('thoughts_list', thoughts_list);
-  }
 
+    //Map<Timestamp,List<String>>
+
+
+  }
 
 
   @override
