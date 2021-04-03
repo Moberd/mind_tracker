@@ -16,8 +16,8 @@ class DayInformationWidget extends StatefulWidget {
   DayInformationWidget(DateTime date,List<String> list,int mark)
   {
     _myThoughts = list;
-    _date = _date;
-    mark = mark;
+    _date = date;
+    _mark = mark;
   }
 
   @override
@@ -90,12 +90,12 @@ class DayInformationWidgetState extends State<DayInformationWidget> {
                   alignment: Alignment.center,
                 )
             ), //////------------------------------------------------------------------------Тут нужно разобраться почему _date.day возвращает null
-           /* Flexible(
+            Flexible(
                 flex: 1,
                 child: new Text(
                   "${_date.day}.${_date.month}.${_date.year}",
                   style: TextStyle(fontSize: 17, color: Color(0xFF736CED)),
-                )),*/
+                )),
           ],
         ),
       ),

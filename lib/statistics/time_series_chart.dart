@@ -36,7 +36,7 @@ class TimeSeriesChart extends StatefulWidget {
   }
 }
 
-///Котейнер для сериализации данных
+///Контейнер для сериализации данных
 class TimeSeriesSales {
   final DateTime time;
   final int sales;
