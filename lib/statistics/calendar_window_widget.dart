@@ -123,7 +123,7 @@ class CalendarWindowWidgetState extends State<CalendarWindowWidget> {
       context,
       MaterialPageRoute(
           builder: (context) =>
-              DayInformationWidget(d, thoughts[d].thoughts, 5)),
+              DayInformationWidget(d, thoughts[d].thoughts, thoughts[d].mark)),
     );
   }
 
