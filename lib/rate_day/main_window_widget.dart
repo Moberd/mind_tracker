@@ -1,16 +1,17 @@
 import 'dart:convert';
 
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-
-
+List<String> thoughtsList = [];
+double digit = 0;
 //*основной экран где должен осуществляться ввод данных
 class MainWindowWidget extends StatefulWidget {
-
-
   @override
   _MainWindowWidgetState createState() => _MainWindowWidgetState();
 }
@@ -19,74 +20,106 @@ class _MainWindowWidgetState extends State<MainWindowWidget> {
 
   @override
   void initState(){
-     setData();
+    super.initState();
   }
 
-  setData() async { //Сохранение листа в память
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setStringList('thoughts_list', thoughts_list);
-
-    //Map<Timestamp,List<String>>
-
-
+  void getData() async  { //Получение с файрбеза
+    print("works");
+    String email = FirebaseAuth.instance.currentUser.email;
+    final DateTime now = DateTime.now();
+    final DateFormat formatter = DateFormat('dd-MM-yyyy');
+    final String formatted = formatter.format(now);
+    DocumentReference ref = FirebaseFirestore.instance.collection("users").doc(email).collection("days").doc(formatted);
+    await ref.get().then((DocumentSnapshot documentSnapshot){
+      if(documentSnapshot.exists){
+        print(documentSnapshot.data());
+        if(documentSnapshot.data()["mark"]!=null){
+        digit = documentSnapshot.data()["mark"];
+        }
+        if(documentSnapshot.data()["thoughts"]!=null){
+          print(documentSnapshot.data()["thoughts"]);
+          thoughtsList = documentSnapshot.data()["thoughts"];
+        }
+      }
+    });
   }
-
 
   @override
   Widget build(BuildContext context) {
+    String email = FirebaseAuth.instance.currentUser.email;
+    final DateTime now = DateTime.now();
+    final DateFormat formatter = DateFormat('dd-MM-yyyy');
+    final String formatted = formatter.format(now);
+    DocumentReference ref = FirebaseFirestore.instance.collection("users").doc(email).collection("days").doc(formatted);
     final bottom = MediaQuery.of(context).viewInsets.bottom;
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        resizeToAvoidBottomInset: false,
-        //resizeToAvoidBottomPadding: false,
-        backgroundColor: Color(0xFFFEF9FF),
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(top: 20.0),
-                child: HowAreYouText(),
+    return FutureBuilder<DocumentSnapshot>(
+      future: ref.get(),
+      builder: (context,snapshot){
+        if(snapshot.data !=null) {
+          if(snapshot.data.data()["mark"]!=null){
+            digit = snapshot.data.data()["mark"];
+          }
+          if(snapshot.data.data()["thoughts"]!=null){
+            print(snapshot.data.data()["thoughts"]);
+            thoughtsList =
+            new List<String>.from(snapshot.data.data()["thoughts"]);
+          }
+        }
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          home: Scaffold(
+            resizeToAvoidBottomInset: false,
+            //resizeToAvoidBottomPadding: false,
+            backgroundColor: Color(0xFFFEF9FF),
+            body: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(top: 20.0),
+                    child: HowAreYouText(),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 8.0),
+                    child: Image.asset(
+                      'assets/meditation_3.gif',
+                      height: 250,
+                    ),
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+                      child: ThoughtsList(),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 10, right: 10, bottom: bottom),
+                    child: ThoughtBoxContainer(
+                      touch: () => setState(() {}),
+                    ),
+                  ),
+                  Flexible(
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 20),
+                      child: IconsRow(),
+                    ),
+                  ),
+                  SliderContainer(
+                    touch: () => setState(() {}),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 8.0),
+                    child:RateDigitText(),
+                  ),
+                ],
               ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 8.0),
-                child: Image.asset(
-                  'assets/meditation_3.gif',
-                  height: 250,
-                ),
-              ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-                  child: ThoughtsList(),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: 10, right: 10, bottom: bottom),
-                child: ThoughtBoxContainer(
-                  touch: () => setState(() {}),
-                ),
-              ),
-              Flexible(
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 20),
-                  child: IconsRow(),
-                ),
-              ),
-              SliderContainer(
-                touch: () => setState(() {}),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 8.0),
-                child:RateDigitText(),
-              ),
-            ],
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
+
   }
 }
 
@@ -101,6 +134,9 @@ class HowAreYouText extends StatelessWidget {
 }
 
 class ThoughtsList extends StatefulWidget {
+  List<String> thoughts =[];
+
+  ThoughtsList({Key key, this.thoughts}) : super(key: key);
   @override
   _ThoughtsListState createState() => _ThoughtsListState();
 }
@@ -108,12 +144,13 @@ class ThoughtsList extends StatefulWidget {
 class _ThoughtsListState extends State<ThoughtsList> {
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(itemCount: thoughts_list.length,
+    return ListView.builder(
+        itemCount: thoughtsList.length,
         itemBuilder: (context, i) {
       return Card(
         child: ListTile(
           //title: Text("Never gonna give you up"),
-          title: Text(thoughts_list[i])
+          title: Text(thoughtsList[i])
         ),
       );
     });
@@ -129,7 +166,15 @@ class ThoughtBoxContainer extends StatefulWidget {
 }
 
 final _controller = TextEditingController();
-List<String> thoughts_list = [];
+void addThought(String value){
+  thoughtsList.add(value);
+  String email = FirebaseAuth.instance.currentUser.email;
+  final DateTime now = DateTime.now();
+  final DateFormat formatter = DateFormat('dd-MM-yyyy');
+  final String formatted = formatter.format(now);
+  FirebaseFirestore.instance.collection("users").doc(email).collection("days").
+      doc(formatted).update({"thoughts":thoughtsList});
+}
 class _ThoughtBoxContainerState extends State<ThoughtBoxContainer> {
   @override
   Widget build(BuildContext context) {
@@ -141,7 +186,7 @@ class _ThoughtBoxContainerState extends State<ThoughtBoxContainer> {
       controller: _controller,
       onFieldSubmitted: (value) {
         if (value != '') {
-        thoughts_list.add(value);
+        addThought(value);
         }
         widget.touch();
         _controller.clear();
@@ -166,9 +211,14 @@ class IconsRow extends StatelessWidget {
   }
 }
 
-
-double digit = 0;
-
+void changeDigit(double value){
+  String email = FirebaseAuth.instance.currentUser.email;
+  final DateTime now = DateTime.now();
+  final DateFormat formatter = DateFormat('dd-MM-yyyy');
+  final String formatted = formatter.format(now);
+  FirebaseFirestore.instance.collection("users").doc(email).collection("days").
+  doc(formatted).update({"mark":value});
+}
 class SliderContainer extends StatefulWidget {
   final void Function() touch;
 
@@ -190,7 +240,11 @@ class _SliderContainerState extends State<SliderContainer> {
       max: _upperValue,
       value: digit,
       onChanged: (val) {
-        digit = val;
+        setState(() {
+          digit = val;
+        });
+        print(digit);
+        changeDigit(val);
         widget.touch();
       },
     );
@@ -198,6 +252,9 @@ class _SliderContainerState extends State<SliderContainer> {
 }
 
 class RateDigitText extends StatefulWidget {
+   double mark=0;
+
+   RateDigitText({Key key, this.mark}) : super(key: key);
   @override
   _RateDigitTextState createState() => _RateDigitTextState();
 }

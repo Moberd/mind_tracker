@@ -35,7 +35,7 @@ dependencies:
 
   #charts_flutter 0.10.0
   charts_flutter: ^0.10.0
-
+  intl: ^0.17.0
 
 
 
