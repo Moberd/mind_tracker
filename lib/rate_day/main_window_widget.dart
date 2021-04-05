@@ -75,18 +75,22 @@ class _MainWindowWidgetState extends State<MainWindowWidget> {
                     padding: const EdgeInsets.only(top: 20.0),
                     child: HowAreYouText(),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 8.0),
-                    child: Image.asset(
-                      'assets/meditation_3.gif',
-                      height: 250,
-                    ),
-                  ),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-                      child: ThoughtsList(),
-                    ),
+                  Flexible(
+                    child: Stack(
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.only(left: 50.0),
+                          child: Image.asset(
+                            'assets/meditation_3.gif',
+                            height: 250,
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+                          child: ThoughtsList(),
+                          ),
+                      ]
+                      ),
                   ),
                   Padding(
                     padding: EdgeInsets.only(left: 10, right: 10, bottom: bottom),
@@ -104,6 +108,7 @@ class _MainWindowWidgetState extends State<MainWindowWidget> {
                     touch: () => setState(() {}),
                     markController: markController,
                   ),
+
                 ],
               ),
             ),
@@ -139,10 +144,25 @@ class _ThoughtsListState extends State<ThoughtsList> {
     return ListView.builder(
         itemCount: thoughtsList.length,
         itemBuilder: (context, i) {
-      return Card(
-        child: ListTile(
-          //title: Text("Never gonna give you up"),
-          title: Text(thoughtsList[i])
+      return Dismissible(
+        key: Key(thoughtsList[i]),
+        onDismissed: (direction) {
+          setState(() {
+             thoughtsList.removeAt(i);
+          });
+
+          ScaffoldMessenger
+              .of(context)
+              .showSnackBar(SnackBar(content: Text("Thought deleted")));
+        },
+        child: Opacity(
+          opacity: 0.7,
+          child: Card(
+          child: ListTile(
+            //title: Text("Never gonna give you up"),
+              title: Text(thoughtsList[i])
+          ),
+        ),
         ),
       );
     });
