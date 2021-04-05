@@ -1,3 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+
 ///Правый экрас с возможностью поделиться и записями друзей
 
 import 'package:flutter/material.dart';
@@ -21,7 +25,6 @@ class FriendsList extends StatefulWidget {
 }
 
 class _FriendsListState extends State<FriendsList> {
-  String result = "";
   final _friends = [
     'Friend1',
     'Friend2',
@@ -54,13 +57,12 @@ class _FriendsListState extends State<FriendsList> {
                 icon: Icon(Icons.camera_alt_outlined),
                 color: Colors.black,
                 iconSize: 40,
-                onPressed: () => {
-                  scan()
-                },
+                onPressed: () => {scan()},
               ),
               IconButton(
                 onPressed: () => {
-                  Navigator.push(context, MaterialPageRoute(builder:(context) => GenerateScreen()))
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => GenerateScreen()))
                 },
                 color: Colors.black,
                 icon: Icon(Icons.qr_code_outlined),
@@ -146,21 +148,40 @@ class _FriendsListState extends State<FriendsList> {
   Future scan() async {
     try {
       var result = await BarcodeScanner.scan();
-      setState(() => this.result = result);
+      setState(() => {addFriend(result)});
     } on PlatformException catch (e) {
       if (e.code == BarcodeScanner.CameraAccessDenied) {
-        setState(() {
-          this.result = 'The user did not grant the camera permission!';
-        });
+        setState(() => {});
       } else {
-        setState(() => this.result = 'Unknown error: $e');
+        setState(() => {});
       }
     } on FormatException {
-      setState(() => this.result =
-          'null (User returned using the "back"-button before scanning anything. Result)');
+      setState(() => {});
     } catch (e) {
-      setState(() => this.result = 'Unknown error: $e');
+      setState(() => {});
     }
   }
 
+  void addFriend(String name) async {
+    var mEmail = FirebaseAuth.instance.currentUser.email;
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(mEmail)
+        .get()
+        .then((value) {
+      List<dynamic> list = value.data()["friends"];
+      list.add(name);
+      applyChanges(list);
+      print(name);
+    });
+  }
+
+  void applyChanges(List<dynamic> friendsList) {
+    var mEmail = FirebaseAuth.instance.currentUser.email;
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(mEmail)
+        .update({"friends": friendsList});
+    print(friendsList);
+  }
 }
