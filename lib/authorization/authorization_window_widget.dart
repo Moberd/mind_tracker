@@ -27,6 +27,7 @@ class AuthorizationWindowWidgetState extends State<AuthorizationWindowWidget> {
           return false;
         },
         child: Scaffold(
+          resizeToAvoidBottomInset: false,
           body: Padding(
             padding: EdgeInsets.only(
                 left: 60.0, top: 20.0, right: 60.0, bottom: 20.0),
