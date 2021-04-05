@@ -36,7 +36,7 @@ class _MainWindowWidgetState extends State<MainWindowWidget> {
       builder: (context,snapshot){
         markController = new TextEditingController();
         markController.text = "0";
-        if(snapshot.data !=null) {
+        if(snapshot.data.data() !=null) {
           if(snapshot.data.data()["mark"]!=null){
             digit = snapshot.data.data()["mark"];
             markController.text = (snapshot.data.data()["mark"]).truncate().toString();
