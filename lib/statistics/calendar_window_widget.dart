@@ -1,4 +1,5 @@
 import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:firebase_auth/firebase_auth.dart';
 
 ///правый экран с календарем и статистикой
 import 'package:flutter/material.dart';
@@ -6,6 +7,21 @@ import 'package:mind_tracker/Types/BaseData.dart';
 import 'package:mind_tracker/statistics/time_series_chart.dart';
 
 import 'day_information_widget.dart';
+
+class CalendarWindowWidgetWrapper extends StatefulWidget {
+  @override
+  _CalendarWindowWidgetWrapperState createState() => _CalendarWindowWidgetWrapperState();
+}
+
+class _CalendarWindowWidgetWrapperState extends State<CalendarWindowWidgetWrapper> {
+  @override
+  Widget build(BuildContext context) {
+    String email = FirebaseAuth.instance.currentUser.email;
+
+    return Container();
+  }
+}
+
 
 class CalendarWindowWidget extends StatefulWidget {
   @override

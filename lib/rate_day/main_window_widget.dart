@@ -22,6 +22,11 @@ class _MainWindowWidgetState extends State<MainWindowWidget> {
   void initState(){
     super.initState();
   }
+  void getData(){
+    FirebaseFirestore.instance.collection("ggg").doc("gg").get().then((value){
+      value.data()["field"];
+    });
+  }
   TextEditingController markController;
   @override
   Widget build(BuildContext context) {
@@ -97,72 +102,6 @@ class _MainWindowWidgetState extends State<MainWindowWidget> {
         );
       },
     );
-    return StreamBuilder<DocumentSnapshot>(
-      stream: ref.snapshots(),
-      builder: (context,snapshot){
-        if(snapshot.data !=null) {
-          if(snapshot.data.data()["mark"]!=null){
-            digit = snapshot.data.data()["mark"];
-          }
-          if(snapshot.data.data()["thoughts"]!=null){
-            thoughtsList =
-            new List<String>.from(snapshot.data.data()["thoughts"]);
-          }
-        }
-        return MaterialApp(
-          debugShowCheckedModeBanner: false,
-          home: Scaffold(
-            resizeToAvoidBottomInset: false,
-            //resizeToAvoidBottomPadding: false,
-            backgroundColor: Color(0xFFFEF9FF),
-            body: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(top: 20.0),
-                    child: HowAreYouText(),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 8.0),
-                    child: Image.asset(
-                      'assets/meditation_3.gif',
-                      height: 250,
-                    ),
-                  ),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-                      child: ThoughtsList(),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(left: 10, right: 10, bottom: bottom),
-                    child: ThoughtBoxContainer(
-                      touch: () => setState(() {}),
-                    ),
-                  ),
-                  Flexible(
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 20),
-                      child: IconsRow(),
-                    ),
-                  ),
-                  SliderContainer(
-                    touch: () => setState(() {}),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 8.0),
-                    child:RateDigitText(),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        );
-      },
-    );
   }
 }
 
@@ -215,8 +154,16 @@ void addThought(String value){
   final DateTime now = DateTime.now();
   final DateFormat formatter = DateFormat('dd-MM-yyyy');
   final String formatted = formatter.format(now);
-  FirebaseFirestore.instance.collection("users").doc(email).collection("days").
-      doc(formatted).update({"thoughts":thoughtsList});
+  final ref = FirebaseFirestore.instance.collection("users").doc(email).collection("days").
+      doc(formatted);
+  ref.get().then((snapshot){
+    if(snapshot.exists){
+     ref.update({"thoughts":thoughtsList});
+    }
+    else{
+      ref.set({"thoughts":thoughtsList});
+    }
+  });
 }
 class _ThoughtBoxContainerState extends State<ThoughtBoxContainer> {
   @override
@@ -259,8 +206,16 @@ void changeDigit(double value){
   final DateTime now = DateTime.now();
   final DateFormat formatter = DateFormat('dd-MM-yyyy');
   final String formatted = formatter.format(now);
-  FirebaseFirestore.instance.collection("users").doc(email).collection("days").
-  doc(formatted).update({"mark":value});
+  final ref = FirebaseFirestore.instance.collection("users").doc(email).collection("days").
+  doc(formatted);
+  ref.get().then((snapshot){
+    if(snapshot.exists){
+      ref.update({"mark":value});
+    }
+    else{
+      ref.set({"mark":value});
+    }
+  });
 }
 class SliderContainer extends StatefulWidget {
   final TextEditingController markController;
