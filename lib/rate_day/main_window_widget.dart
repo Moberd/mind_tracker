@@ -22,28 +22,7 @@ class _MainWindowWidgetState extends State<MainWindowWidget> {
   void initState(){
     super.initState();
   }
-
-  void getData() async  { //Получение с файрбеза
-    print("works");
-    String email = FirebaseAuth.instance.currentUser.email;
-    final DateTime now = DateTime.now();
-    final DateFormat formatter = DateFormat('dd-MM-yyyy');
-    final String formatted = formatter.format(now);
-    DocumentReference ref = FirebaseFirestore.instance.collection("users").doc(email).collection("days").doc(formatted);
-    await ref.get().then((DocumentSnapshot documentSnapshot){
-      if(documentSnapshot.exists){
-        print(documentSnapshot.data());
-        if(documentSnapshot.data()["mark"]!=null){
-        digit = documentSnapshot.data()["mark"];
-        }
-        if(documentSnapshot.data()["thoughts"]!=null){
-          print(documentSnapshot.data()["thoughts"]);
-          thoughtsList = documentSnapshot.data()["thoughts"];
-        }
-      }
-    });
-  }
-
+  TextEditingController markController;
   @override
   Widget build(BuildContext context) {
     String email = FirebaseAuth.instance.currentUser.email;
@@ -54,6 +33,72 @@ class _MainWindowWidgetState extends State<MainWindowWidget> {
     final bottom = MediaQuery.of(context).viewInsets.bottom;
     return FutureBuilder<DocumentSnapshot>(
       future: ref.get(),
+      builder: (context,snapshot){
+        markController = new TextEditingController();
+        markController.text = "0";
+        if(snapshot.data !=null) {
+          if(snapshot.data.data()["mark"]!=null){
+            digit = snapshot.data.data()["mark"];
+            markController.text = (snapshot.data.data()["mark"]).truncate().toString();
+          }
+          if(snapshot.data.data()["thoughts"]!=null){
+            thoughtsList =
+            new List<String>.from(snapshot.data.data()["thoughts"]);
+          }
+        }
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          home: Scaffold(
+            resizeToAvoidBottomInset: false,
+            //resizeToAvoidBottomPadding: false,
+            backgroundColor: Color(0xFFFEF9FF),
+            body: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(top: 20.0),
+                    child: HowAreYouText(),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 8.0),
+                    child: Image.asset(
+                      'assets/meditation_3.gif',
+                      height: 250,
+                    ),
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+                      child: ThoughtsList(),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 10, right: 10, bottom: bottom),
+                    child: ThoughtBoxContainer(
+                      touch: () => setState(() {}),
+                    ),
+                  ),
+                  Flexible(
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 20),
+                      child: IconsRow(),
+                    ),
+                  ),
+                  SliderContainer(
+                    touch: () => setState(() {}),
+                    markController: markController,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+    return StreamBuilder<DocumentSnapshot>(
+      stream: ref.snapshots(),
       builder: (context,snapshot){
         if(snapshot.data !=null) {
           if(snapshot.data.data()["mark"]!=null){
@@ -118,7 +163,6 @@ class _MainWindowWidgetState extends State<MainWindowWidget> {
         );
       },
     );
-
   }
 }
 
@@ -185,9 +229,9 @@ class _ThoughtBoxContainerState extends State<ThoughtBoxContainer> {
       controller: _controller,
       onFieldSubmitted: (value) {
         if (value != '') {
+          widget.touch();
         addThought(value);
         }
-        widget.touch();
         _controller.clear();
     }
     );
@@ -219,9 +263,9 @@ void changeDigit(double value){
   doc(formatted).update({"mark":value});
 }
 class SliderContainer extends StatefulWidget {
+  final TextEditingController markController;
   final void Function() touch;
-
-  const SliderContainer({Key key, this.touch}) : super(key: key);
+  const SliderContainer({Key key, this.touch, this.markController}) : super(key: key);
   @override
   _SliderContainerState createState() => _SliderContainerState();
 }
@@ -231,18 +275,37 @@ class _SliderContainerState extends State<SliderContainer> {
   static double _upperValue = 10;
   @override
   Widget build(BuildContext context) {
+    return Column(children: [
+      Slider(
+        divisions: 10,
+        activeColor: Colors.deepPurple,
+        inactiveColor: Colors.deepPurple[50],
+        min: _lowerValue,
+        max: _upperValue,
+        value: double.parse(widget.markController.text),
+        onChanged: (val) {
+          setState(() {
+            widget.markController.text = val.truncate().toString();
+          });
+          changeDigit(val);
+        },
+      ),
+      Padding(
+        padding: const EdgeInsets.only(bottom: 8.0),
+        child:RateDigitText(markController: widget.markController,),
+      ),
+    ],);
     return Slider(
       divisions: 10,
       activeColor: Colors.deepPurple,
       inactiveColor: Colors.deepPurple[50],
       min: _lowerValue,
       max: _upperValue,
-      value: digit,
+      value: double.parse(widget.markController.text),
       onChanged: (val) {
         setState(() {
-          digit = val;
+          widget.markController.text = val.truncate().toString();
         });
-        print(digit);
         changeDigit(val);
       },
     );
@@ -250,9 +313,9 @@ class _SliderContainerState extends State<SliderContainer> {
 }
 
 class RateDigitText extends StatefulWidget {
-   double mark=0;
+  final TextEditingController markController;
 
-   RateDigitText({Key key, this.mark}) : super(key: key);
+  const RateDigitText({Key key, this.markController}) : super(key: key);
   @override
   _RateDigitTextState createState() => _RateDigitTextState();
 }
@@ -262,7 +325,7 @@ class _RateDigitTextState extends State<RateDigitText> {
   Widget build(BuildContext context) {
     return Container(
       child: Text(
-        "${digit.toInt()}",
+        "${widget.markController.text}",
         style: TextStyle(fontSize: 30),
       ),
       width: 40,
