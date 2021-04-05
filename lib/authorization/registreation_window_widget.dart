@@ -145,7 +145,7 @@ https://coderoad.ru/61538657/%D0%9A%D0%B0%D0%BA-%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D
   }
   Future<void> addUser(CollectionReference users) {
     // Call the user's CollectionReference to add a new user
-    return users.doc(loginController.text).set({"friends":"","lastvisited":""})
+    return users.doc(loginController.text).set({"friends":"","lastvisited":"","lastmark":""})
         .then((value) => print("User Added"))
         .catchError((error) => print("Failed to add user: $error"));
   }
