@@ -149,6 +149,13 @@ class _ThoughtsListState extends State<ThoughtsList> {
         onDismissed: (direction) {
           setState(() {
              thoughtsList.removeAt(i);
+             String email = FirebaseAuth.instance.currentUser.email;
+             final DateTime now = DateTime.now();
+             final DateFormat formatter = DateFormat('dd-MM-yyyy');
+             final String formatted = formatter.format(now);
+             final ref = FirebaseFirestore.instance.collection("users").doc(email).collection("days"). doc(formatted);
+             ref.update({"thoughts":thoughtsList});
+
           });
 
           ScaffoldMessenger
