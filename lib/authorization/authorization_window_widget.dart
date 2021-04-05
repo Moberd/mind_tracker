@@ -22,12 +22,6 @@ class AuthorizationWindowWidgetState extends State<AuthorizationWindowWidget> {
   }
 
   Widget build(BuildContext context) {
-    auth.authStateChanges()
-        .listen((User user) {
-      if (user != null) {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
-      }
-    });
     return WillPopScope(
         onWillPop: () async {
           return false;
@@ -125,9 +119,6 @@ class AuthorizationWindowWidgetState extends State<AuthorizationWindowWidget> {
             ),
           ),
         ));
-
-
-
   }
 
   //TODO Напишите функцию
@@ -154,6 +145,7 @@ class AuthorizationWindowWidgetState extends State<AuthorizationWindowWidget> {
           email:loginController.text,
           password: passwordController.text
       );
+      Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         print('No user found for that email.');

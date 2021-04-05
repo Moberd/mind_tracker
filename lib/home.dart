@@ -30,7 +30,7 @@ class _HomeState extends State<Home> {
   getData() async { //Получение листа из памяти
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      thoughts_list = prefs.getStringList('thoughts_list') == null? [] : prefs.getStringList('thoughts_list');
+      thoughtsList = prefs.getStringList('thoughts_list') == null? [] : prefs.getStringList('thoughts_list');
     });
   }
   int _currentIndex = 1;
