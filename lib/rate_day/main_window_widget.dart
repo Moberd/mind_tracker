@@ -60,7 +60,6 @@ class _MainWindowWidgetState extends State<MainWindowWidget> {
             digit = snapshot.data.data()["mark"];
           }
           if(snapshot.data.data()["thoughts"]!=null){
-            print(snapshot.data.data()["thoughts"]);
             thoughtsList =
             new List<String>.from(snapshot.data.data()["thoughts"]);
           }
@@ -245,7 +244,6 @@ class _SliderContainerState extends State<SliderContainer> {
         });
         print(digit);
         changeDigit(val);
-        widget.touch();
       },
     );
   }
