@@ -128,6 +128,7 @@ https://coderoad.ru/61538657/%D0%9A%D0%B0%D0%BA-%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D
           email: loginController.text,
           password: passwordController1.text
       );
+
       CollectionReference users = FirebaseFirestore.instance.collection('users');
       addUser(users);
       Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
