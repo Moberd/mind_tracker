@@ -1,4 +1,6 @@
+
 import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 ///правый экран с календарем и статистикой
@@ -17,16 +19,32 @@ class _CalendarWindowWidgetWrapperState extends State<CalendarWindowWidgetWrappe
   @override
   Widget build(BuildContext context) {
     String email = FirebaseAuth.instance.currentUser.email;
-
-    return Container();
+    return new StreamBuilder<QuerySnapshot>(
+      stream:FirebaseFirestore.instance.collection("users").doc(email).collection("days").snapshots(),
+      builder:(BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot){
+        if(!snapshot.hasData) return new Text("Loading");
+        Map<DateTime,BaseData> thoughts = {};
+        for(DocumentSnapshot doc in snapshot.data.docs){
+          final ddMMyyyy= doc.id.split("-");
+          int mark = doc.data()["mark"];
+          List<String> thoughtsLst = new List<String>.from(doc.data()["thoughts"]);
+          final date = new DateTime(int.parse(ddMMyyyy[2]),int.parse(ddMMyyyy[1]),int.parse(ddMMyyyy[0]));
+          thoughts[date] = new BaseData(date, thoughtsLst, mark);
+        }
+        return CalendarWindowWidget(thoughts: thoughts,);
+      } ,
+    );
   }
 }
 
 
 class CalendarWindowWidget extends StatefulWidget {
+  final Map<DateTime,BaseData> thoughts;
+
+  const CalendarWindowWidget({Key key, this.thoughts}) : super(key: key);
   @override
   State<StatefulWidget> createState() {
-    return new CalendarWindowWidgetState();
+    return new CalendarWindowWidgetState(thoughts);
   }
 }
 
@@ -38,10 +56,8 @@ class CalendarWindowWidgetState extends State<CalendarWindowWidget> {
       DateTime.now().year, DateTime.now().month, DateTime.now().day);
   Map<DateTime, BaseData> thoughts = Map<DateTime, BaseData>();
   TimeSeriesChart timeSeriesChart;
-
-
-  CalendarWindowWidgetState() {
-    getThoughts();
+  CalendarWindowWidgetState(this.thoughts) {
+   // getThoughts();
     List<charts.Series<TimeSeriesSales, DateTime>> list;
     timeSeriesChart =
         new TimeSeriesChart(GetChartsData(thoughts, DateTime.now()));
@@ -70,23 +86,24 @@ class CalendarWindowWidgetState extends State<CalendarWindowWidget> {
   }
 
   void getThoughts() {
-    List<String> mood1 = [
-      "Never gonna give you up",
-      "Never gonna let you down",
-      "Never gonna run around and desert you",
-      "Never gonna make you cry",
-      "Never gonna say goodbye",
-      "Never gonna tell a lie and hurt you"
-    ];
-    List<String> mood2 = ["Приветульки", "Сегодня мы играем", "Маинкрафт"];
-    DateTime dtTest = DateTime.now();
-    DateTime dt1 = new DateTime(dtTest.year, dtTest.month, dtTest.day);
-    DateTime dt2 = new DateTime(dtTest.year, dtTest.month, dtTest.day - 1);
+   // thoughts = widget.thoughts;
+//  List<String> mood1 = [
+//    "Never gonna give you up",
+//    "Never gonna let you down",
+//    "Never gonna run around and desert you",
+//    "Never gonna make you cry",
+//    "Never gonna say goodbye",
+//    "Never gonna tell a lie and hurt you"
+//  ];
+//  List<String> mood2 = ["Приветульки", "Сегодня мы играем", "Маинкрафт"];
+//  DateTime dtTest = DateTime.now();
+//  DateTime dt1 = new DateTime(dtTest.year, dtTest.month, dtTest.day);
+//  DateTime dt2 = new DateTime(dtTest.year, dtTest.month, dtTest.day - 1);
 
-    //Timestamp ts1 = Timestamp.fromDate(dt1);
-    //Timestamp ts2 = Timestamp.fromDate(dt2);
-    thoughts[dt1] = new BaseData(dt1, mood1, 5);
-    thoughts[dt2] = new BaseData(dt2, mood2, 9);
+//  //Timestamp ts1 = Timestamp.fromDate(dt1);
+//  //Timestamp ts2 = Timestamp.fromDate(dt2);
+//  thoughts[dt1] = new BaseData(dt1, mood1, 5);
+//  thoughts[dt2] = new BaseData(dt2, mood2, 9);
   }
 
   bool _isRightDay(DateTime a) {

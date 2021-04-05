@@ -9,7 +9,6 @@ import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 List<String> thoughtsList = [];
-double digit = 0;
 //*основной экран где должен осуществляться ввод данных
 class MainWindowWidget extends StatefulWidget {
   @override
@@ -38,19 +37,28 @@ class _MainWindowWidgetState extends State<MainWindowWidget> {
     final bottom = MediaQuery.of(context).viewInsets.bottom;
     return FutureBuilder<DocumentSnapshot>(
       future: ref.get(),
+
       builder: (context,snapshot){
         markController = new TextEditingController();
         markController.text = "0";
-        if(snapshot.data.data() !=null) {
-          if(snapshot.data.data()["mark"]!=null){
-            digit = snapshot.data.data()["mark"];
-            markController.text = (snapshot.data.data()["mark"]).truncate().toString();
+        try {
+          if (snapshot.data.exists) {
+            if (snapshot.data.data() != null) {
+              if (snapshot.data.data()["mark"] != null) {
+                markController.text =
+                    (snapshot.data.data()["mark"]).toString();
+              }
+              if (snapshot.data.data()["thoughts"] != null) {
+                thoughtsList =
+                new List<String>.from(snapshot.data.data()["thoughts"]);
+              }
+            }
           }
-          if(snapshot.data.data()["thoughts"]!=null){
-            thoughtsList =
-            new List<String>.from(snapshot.data.data()["thoughts"]);
-          }
+        }catch(e){
+          print(e);
+          return new Center(child:CircularProgressIndicator() ,);
         }
+
         return MaterialApp(
           debugShowCheckedModeBanner: false,
           home: Scaffold(
@@ -100,7 +108,8 @@ class _MainWindowWidgetState extends State<MainWindowWidget> {
             ),
           ),
         );
-      },
+
+        },
     );
   }
 }
@@ -150,6 +159,7 @@ class ThoughtBoxContainer extends StatefulWidget {
 final _controller = TextEditingController();
 void addThought(String value){
   thoughtsList.add(value);
+  print(thoughtsList);
   String email = FirebaseAuth.instance.currentUser.email;
   final DateTime now = DateTime.now();
   final DateFormat formatter = DateFormat('dd-MM-yyyy');
@@ -158,9 +168,11 @@ void addThought(String value){
       doc(formatted);
   ref.get().then((snapshot){
     if(snapshot.exists){
+      print("exist");
      ref.update({"thoughts":thoughtsList});
     }
     else{
+      print("dosen't");
       ref.set({"thoughts":thoughtsList});
     }
   });
@@ -176,8 +188,8 @@ class _ThoughtBoxContainerState extends State<ThoughtBoxContainer> {
       controller: _controller,
       onFieldSubmitted: (value) {
         if (value != '') {
-          widget.touch();
         addThought(value);
+        widget.touch();
         }
         _controller.clear();
     }
@@ -210,7 +222,7 @@ void changeDigit(double value){
   doc(formatted);
   ref.get().then((snapshot){
     if(snapshot.exists){
-      ref.update({"mark":value});
+      ref.update({"mark":value.truncate()});
     }
     else{
       ref.set({"mark":value});

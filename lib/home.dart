@@ -35,7 +35,7 @@ class _HomeState extends State<Home> {
   }
   int _currentIndex = 1;
   final List<Widget> _children = [
-    CalendarWindowWidget(),
+    CalendarWindowWidgetWrapper(),
     MainWindowWidget(),
     ShareWindowWidget(),
   ];
