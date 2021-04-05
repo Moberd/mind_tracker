@@ -9,6 +9,7 @@ import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 List<String> thoughtsList = [];
+bool dayExist = false;
 //*основной экран где должен осуществляться ввод данных
 class MainWindowWidget extends StatefulWidget {
   @override
@@ -166,16 +167,22 @@ void addThought(String value){
   final String formatted = formatter.format(now);
   final ref = FirebaseFirestore.instance.collection("users").doc(email).collection("days").
       doc(formatted);
-  ref.get().then((snapshot){
-    if(snapshot.exists){
-      print("exist");
-     ref.update({"thoughts":thoughtsList});
-    }
-    else{
-      print("dosen't");
-      ref.set({"thoughts":thoughtsList});
-    }
-  });
+  if(dayExist) {
+    ref.update({"thoughts":thoughtsList});}
+  if(!dayExist) {
+    ref.get().then((snapshot) {
+      if (snapshot.exists) {
+        print("exist");
+        dayExist = true;
+        ref.update({"thoughts": thoughtsList});
+      }
+      else {
+        print("dosen't");
+        dayExist = true;
+        ref.set({"thoughts": thoughtsList});
+      }
+    });
+  }
 }
 class _ThoughtBoxContainerState extends State<ThoughtBoxContainer> {
   @override

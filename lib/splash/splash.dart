@@ -27,7 +27,7 @@ class SplashWidgetState extends State<SplashWidget>{
       }
     });
     //TODO()cюда бы сплешик какой
-    return Container(child: Text("gg"),);
+    return Center(child: CircularProgressIndicator(),);
   }
 
 }
