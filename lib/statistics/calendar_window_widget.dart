@@ -19,16 +19,28 @@ class _CalendarWindowWidgetWrapperState extends State<CalendarWindowWidgetWrappe
   @override
   Widget build(BuildContext context) {
     String email = FirebaseAuth.instance.currentUser.email;
-    return new StreamBuilder<QuerySnapshot>(
-      stream:FirebaseFirestore.instance.collection("users").doc(email).collection("days").snapshots(),
+    return new FutureBuilder<QuerySnapshot>(
+      future:FirebaseFirestore.instance.collection("users").doc(email).collection("days").get(),
       builder:(BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot){
-        if(!snapshot.hasData) return new Text("Loading");
+        if(snapshot == null) return new Center(child: CircularProgressIndicator(),);
+        if(snapshot.data==null)return new Center(child: CircularProgressIndicator(),);
         Map<DateTime,BaseData> thoughts = {};
-
         for(DocumentSnapshot doc in snapshot.data.docs){
           final ddMMyyyy= doc.id.split("-");
-          int mark = doc.data()["mark"];
-          List<String> thoughtsLst = new List<String>.from(doc.data()["thoughts"]);
+            int mark;
+          try{
+            mark = doc.data()["mark"];
+          }catch(e){
+            int mark = 0;
+          }
+
+          List<String> thoughtsLst;
+          try {
+            List<String> thoughtsLst = new List<String>.from(
+                doc.data()["thoughts"]);
+          }catch(e){
+            List<String> thoughtsLst = [];
+          }
           final date = new DateTime(int.parse(ddMMyyyy[2]),int.parse(ddMMyyyy[1]),int.parse(ddMMyyyy[0]));
           thoughts[date] = new BaseData(date, thoughtsLst, mark);
         }

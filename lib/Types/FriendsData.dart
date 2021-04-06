@@ -1,7 +1,7 @@
 class FriendsData {
   String dates;
   String friendName;
-  String mood;
+  int mood;
 
   FriendsData(this.dates, this.friendName, this.mood);
 

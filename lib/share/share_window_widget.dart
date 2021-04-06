@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:barcode_scan_fix/barcode_scan.dart';
@@ -18,19 +19,27 @@ class _FriendListWrapperState extends State<FriendListWrapper> {
   @override
   Widget build(BuildContext context) {
     String email = FirebaseAuth.instance.currentUser.email;
-    return new FutureBuilder<DocumentSnapshot>(
-      future: FirebaseFirestore.instance.collection("users_friends").doc(email).get(),
+    return new StreamBuilder<DocumentSnapshot>(
+      stream: FirebaseFirestore.instance.collection("users_friends").doc(email).snapshots(),
       builder: (context,myDoc){
-        if(myDoc == null) return new Text("Loading");
+        if(myDoc == null) return new Center(child: CircularProgressIndicator(),);
+        if(myDoc.data==null)return new Center(child: CircularProgressIndicator(),);
+        if(myDoc.data.data()==null)return new Center(child: CircularProgressIndicator(),);
         String userName = myDoc.data.data()["name"];
-        print(userName);
-        return new StreamBuilder<QuerySnapshot>(
-          stream:FirebaseFirestore.instance.collection("users_friends").where("friends",arrayContains: ["$email"]).snapshots(),
+        return new FutureBuilder<QuerySnapshot>(
+          future:FirebaseFirestore.instance.collection("users_friends").where("friends",arrayContainsAny: [email]).get(),
           builder:(BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot){
             if(!snapshot.hasData) return new Text("Loading");
             List<FriendsData> data = [];
             for(DocumentSnapshot doc in snapshot.data.docs){
-              data.add(new FriendsData(doc.data()["lastvisited"],doc.data()["name"],doc.data()["lastmark"]));
+              if(doc.data()["lastmark"]==""){
+                data.add(new FriendsData("01-01-1969",doc.data()["name"],5));
+              }
+              else {
+                data.add(new FriendsData(
+                    doc.data()["lastvisited"], doc.data()["name"],
+                    doc.data()["lastmark"]));
+              }
             }
             return FriendsList(userName: userName,data: data,);
           },
@@ -74,7 +83,7 @@ class _FriendsListState extends State<FriendsList> {
           appBar: AppBar(
               toolbarHeight: 70,
               backgroundColor: Colors.white,
-              title: Text('${widget.userName}', style: _titleFont),
+              title: Text('${widget.userName}', style: _titleFont), //TODO МИША НАВЕДИ КРАСОТУ
               actions: <Widget>[
                 IconButton(
                   icon: Icon(Icons.camera_alt_outlined),
@@ -92,7 +101,7 @@ class _FriendsListState extends State<FriendsList> {
                   iconSize: 40,
                 )
               ]),
-          body: Text("No friends"));
+          body: Text("No friends")); //TODO МИША НАВЕДИ КРАСОТУ
   return Scaffold(
         backgroundColor: Color(0xFFFEF9FF),
         appBar: AppBar(
@@ -131,8 +140,8 @@ class _FriendsListState extends State<FriendsList> {
                     color: Color(0xFFFEF9FF),
                   ),
                   child: ListTile(
-                    title: Text('${widget.data[i].dates}', style: _dateFont),
-                    subtitle: _buildRow(widget.data[i].friendName, int.parse(widget.data[i].mood)),
+                    title: Text('${widget.data[i].dates}', style: _dateFont), //TODO МИША НАВЕДИ КРАСОТУ
+                    subtitle: _buildRow(widget.data[i].friendName, widget.data[i].mood),//TODO МИША НАВЕДИ КРАСОТУ
                   )),
             );
           }
