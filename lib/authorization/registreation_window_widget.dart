@@ -25,17 +25,16 @@ class RegistrationWindowWidgetState extends State<RegistrationWindowWidget> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      backgroundColor: Color(0xFFFEF9FF),
+      backgroundColor: Color(0xFFE9DDF6),
       appBar: AppBar(title: Text("Registration")),
       body: Padding(
         padding:
             EdgeInsets.only(left: 60.0, top: 20.0, right: 60.0, bottom: 20.0),
-        child: Stack(
-          alignment: AlignmentDirectional.topCenter,
+        child: Column(
           children: [
             //TODO добавьте сюда лого приложения
             Image.asset(
-                  'assets/logo.jpg',
+                  'assets/logo.png',
                   height: 256,
                 ),
             //Центральный блок
@@ -88,7 +87,7 @@ class RegistrationWindowWidgetState extends State<RegistrationWindowWidget> {
                   alignment: Alignment.bottomCenter,
                   child: MaterialButton(
                     onPressed: register,
-                    color: Color.fromARGB(123, 213, 128, 125),
+                    color: Color.fromARGB(255, 159, 159, 237),
                     minWidth: 200.0,
                     child: Text("Register"),
                   ),
