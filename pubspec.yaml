@@ -54,4 +54,5 @@ flutter:
   - assets/meditation.gif
   - assets/meditation_3.gif
   - assets/logo.jpg
+  - assets/logo.png
   uses-material-design: true

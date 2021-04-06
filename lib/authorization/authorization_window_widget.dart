@@ -28,15 +28,17 @@ class AuthorizationWindowWidgetState extends State<AuthorizationWindowWidget> {
           return false;
         },
         child: Scaffold(
+          backgroundColor: Color(0xFFE9DDF6),
           resizeToAvoidBottomInset: false,
           body: Padding(
             padding: EdgeInsets.only(
                 left: 60.0, top: 60.0, right: 60.0, bottom: 20.0),
-            child: Stack(
-              alignment: AlignmentDirectional.topCenter,
+            child: Column(
               children: [
-                //TODO добавьте сюда лого приложения
-                
+                Image.asset(
+                  'assets/logo.png',
+                  height: 256,
+                ),
                 //Центральный блок
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -58,7 +60,6 @@ class AuthorizationWindowWidgetState extends State<AuthorizationWindowWidget> {
                         //кнопка показа пароля
                         suffixIcon: IconButton(
                             icon: Icon(
-                              // Based on passwordVisible state choose the icon
                               _passwordVisible
                                   ? Icons.visibility
                                   : Icons.visibility_off,
@@ -101,11 +102,10 @@ class AuthorizationWindowWidgetState extends State<AuthorizationWindowWidget> {
                             //Кнопка авторизации
                             MaterialButton(
                               onPressed: login,
-                              color: Color.fromARGB(123, 213, 128, 125),
+                              color: Color.fromARGB(255, 159, 159, 237),
                               minWidth: 200.0,
                               child: Text("Login"),
                             ),
-
                             //Кнопка регистрации
                             FlatButton(
                               child: Text("Register"),

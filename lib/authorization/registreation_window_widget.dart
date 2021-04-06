@@ -25,19 +25,17 @@ class RegistrationWindowWidgetState extends State<RegistrationWindowWidget> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: true,
-      backgroundColor: Color(0xFFFEF9FF),
+      backgroundColor: Color(0xFFE9DDF6),
       appBar: AppBar(title: Text("Registration")),
       body: Padding(
         padding:
             EdgeInsets.only(left: 60.0, top: 20.0, right: 60.0, bottom: 20.0),
-        child: Stack(
-          alignment: AlignmentDirectional.topCenter,
+        child: Column(
           children: [
-            //TODO добавьте сюда лого приложения
             Image.asset(
-                  'assets/logo.jpg',
-                  height: 256,
-                ),
+              'assets/logo.png',
+              height: 256,
+            ),
             //Центральный блок
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -76,8 +74,6 @@ class RegistrationWindowWidgetState extends State<RegistrationWindowWidget> {
                   controller: nameController,
                   decoration: new InputDecoration(labelText: "Your Name"),
                 ),
-
-
               ],
             ),
 
@@ -88,7 +84,7 @@ class RegistrationWindowWidgetState extends State<RegistrationWindowWidget> {
                   alignment: Alignment.bottomCenter,
                   child: MaterialButton(
                     onPressed: register,
-                    color: Color.fromARGB(123, 213, 128, 125),
+                    color: Color.fromARGB(255, 159, 159, 237),
                     minWidth: 200.0,
                     child: Text("Register"),
                   ),
@@ -98,39 +94,47 @@ class RegistrationWindowWidgetState extends State<RegistrationWindowWidget> {
       ),
     );
   }
-  bool checkPassword(){
+
+  bool checkPassword() {
     return true;
   }
-  Future<void>  register()
-  async {
-    if(checkPassword()){
-    try {
-      UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
-          email: loginController.text,
-          password: passwordController1.text
-      );
 
-      CollectionReference users = FirebaseFirestore.instance.collection('users');
-      addUser(users);
-      Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
+  Future<void> register() async {
+    if (checkPassword()) {
+      try {
+        UserCredential userCredential = await FirebaseAuth.instance
+            .createUserWithEmailAndPassword(
+                email: loginController.text,
+                password: passwordController1.text);
 
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'weak-password') {
-        print('The password provided is too weak.');
-      } else if (e.code == 'email-already-in-use') {
-        print('The account already exists for that email.');
+        CollectionReference users =
+            FirebaseFirestore.instance.collection('users');
+        addUser(users);
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => Home()));
+      } on FirebaseAuthException catch (e) {
+        if (e.code == 'weak-password') {
+          print('The password provided is too weak.');
+        } else if (e.code == 'email-already-in-use') {
+          print('The account already exists for that email.');
+        }
+      } catch (e) {
+        print(e);
       }
-    } catch (e) {
-      print(e);
-    }}
+    }
   }
+
   Future<void> addUser(CollectionReference users) {
     // Call the user's CollectionReference to add a new user
-    return users.doc(loginController.text).set({"friends":[],"lastvisited":"","lastmark":"","name":nameController.text})
+    return users
+        .doc(loginController.text)
+        .set({
+          "friends": [],
+          "lastvisited": "",
+          "lastmark": "",
+          "name": nameController.text
+        })
         .then((value) => print("User Added"))
         .catchError((error) => print("Failed to add user: $error"));
   }
-
-
-
 }
