@@ -255,15 +255,15 @@ void changeDigit(double value){
   final String formatted = formatter.format(now);
   final ref = FirebaseFirestore.instance.collection("users").doc(email).collection("days").
   doc(formatted);
-  final lastVisitedRef = FirebaseFirestore.instance.collection("users").doc(email);
+  final lastVisitedRef = FirebaseFirestore.instance.collection("users_friends").doc(email);
   ref.get().then((snapshot){
     if(snapshot.exists){
       ref.update({"mark":value.truncate()});
-      lastVisitedRef.update({"lastvisited":formatted,"lastmark":value});
+      lastVisitedRef.update({"lastvisited":formatted,"lastmark":value.truncate()});
     }
     else{
-      ref.set({"mark":value});
-      lastVisitedRef.update({"lastvisited":formatted,"lastmark":value});
+      ref.set({"mark":value.truncate()});
+      lastVisitedRef.update({"lastvisited":formatted,"lastmark":value.truncate()});
     }
   });
 }

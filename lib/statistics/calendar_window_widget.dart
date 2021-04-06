@@ -24,6 +24,7 @@ class _CalendarWindowWidgetWrapperState extends State<CalendarWindowWidgetWrappe
       builder:(BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot){
         if(!snapshot.hasData) return new Text("Loading");
         Map<DateTime,BaseData> thoughts = {};
+
         for(DocumentSnapshot doc in snapshot.data.docs){
           final ddMMyyyy= doc.id.split("-");
           int mark = doc.data()["mark"];

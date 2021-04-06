@@ -37,7 +37,7 @@ class _HomeState extends State<Home> {
   final List<Widget> _children = [
     CalendarWindowWidgetWrapper(),
     MainWindowWidget(),
-    ShareWindowWidget(),
+    FriendListWrapper(),
   ];
 
   @override

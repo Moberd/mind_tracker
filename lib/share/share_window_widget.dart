@@ -6,6 +6,31 @@ import 'package:flutter/services.dart';
 import 'package:barcode_scan_fix/barcode_scan.dart';
 import 'package:mind_tracker/share/generate_qr.dart';
 
+
+
+class FriendListWrapper extends StatefulWidget {
+  @override
+  _FriendListWrapperState createState() => _FriendListWrapperState();
+}
+
+class _FriendListWrapperState extends State<FriendListWrapper> {
+  @override
+  Widget build(BuildContext context) {
+    String email = FirebaseAuth.instance.currentUser.email;
+    return new StreamBuilder<DocumentSnapshot>(
+      stream:FirebaseFirestore.instance.collection("users_friends").doc(email).snapshots() ,
+      builder:(BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot){
+            if(!snapshot.hasData) return new Text("Loading");
+            String userName = snapshot.data.data()["name"];
+            return new StreamBuilder(
+
+            );
+      },
+    );
+  }
+}
+
+
 class ShareWindowWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -17,6 +42,10 @@ class ShareWindowWidget extends StatelessWidget {
 }
 
 class FriendsList extends StatefulWidget {
+  final String userName;
+
+
+  const FriendsList({Key key, this.userName}) : super(key: key);
   @override
   _FriendsListState createState() => _FriendsListState();
 }
@@ -86,6 +115,9 @@ class _FriendsListState extends State<FriendsList> {
   Widget _buildRow(String text, int mood) {
     Icon i;
     switch (mood) {
+      case 0:
+        i = Icon(Icons.thumb_down, color: Colors.deepPurple);
+        break;
       case 1:
         i = Icon(Icons.thumb_down, color: Colors.deepPurple);
         break;
@@ -148,7 +180,7 @@ class _FriendsListState extends State<FriendsList> {
   void addFriend(String name) async {
     var mEmail = FirebaseAuth.instance.currentUser.email;
     FirebaseFirestore.instance
-        .collection('users')
+        .collection('users_friends')
         .doc(mEmail)
         .get()
         .then((value) {
@@ -161,7 +193,7 @@ class _FriendsListState extends State<FriendsList> {
   void applyChanges(List<dynamic> friendsList) {
     var mEmail = FirebaseAuth.instance.currentUser.email;
     FirebaseFirestore.instance
-        .collection('users')
+        .collection('users_friends')
         .doc(mEmail)
         .update({"friends": friendsList});
   }
