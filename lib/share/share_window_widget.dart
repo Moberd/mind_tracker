@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:barcode_scan_fix/barcode_scan.dart';
+import 'package:mind_tracker/Types/FriendsData.dart';
 import 'package:mind_tracker/share/generate_qr.dart';
 
 
@@ -17,16 +18,26 @@ class _FriendListWrapperState extends State<FriendListWrapper> {
   @override
   Widget build(BuildContext context) {
     String email = FirebaseAuth.instance.currentUser.email;
-    return new StreamBuilder<DocumentSnapshot>(
-      stream:FirebaseFirestore.instance.collection("users_friends").doc(email).snapshots() ,
-      builder:(BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot){
+    return new FutureBuilder<DocumentSnapshot>(
+      future: FirebaseFirestore.instance.collection("users_friends").doc(email).get(),
+      builder: (context,myDoc){
+        if(myDoc == null) return new Text("Loading");
+        String userName = myDoc.data.data()["name"];
+        print(userName);
+        return new StreamBuilder<QuerySnapshot>(
+          stream:FirebaseFirestore.instance.collection("users_friends").where("friends",arrayContains: ["$email"]).snapshots(),
+          builder:(BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot){
             if(!snapshot.hasData) return new Text("Loading");
-            String userName = snapshot.data.data()["name"];
-            return new StreamBuilder(
-
-            );
+            List<FriendsData> data = [];
+            for(DocumentSnapshot doc in snapshot.data.docs){
+              data.add(new FriendsData(doc.data()["lastvisited"],doc.data()["name"],doc.data()["lastmark"]));
+            }
+            return FriendsList(userName: userName,data: data,);
+          },
+        );
       },
     );
+
   }
 }
 
@@ -43,9 +54,10 @@ class ShareWindowWidget extends StatelessWidget {
 
 class FriendsList extends StatefulWidget {
   final String userName;
+  final List<FriendsData> data;
 
 
-  const FriendsList({Key key, this.userName}) : super(key: key);
+  const FriendsList({Key key, this.userName, this.data}) : super(key: key);
   @override
   _FriendsListState createState() => _FriendsListState();
 }
@@ -57,12 +69,36 @@ class _FriendsListState extends State<FriendsList> {
       TextStyle(fontSize: 24.0, color: Color.fromRGBO(0, 0, 0, 1));
   final _dateFont = TextStyle(fontSize: 24.0, color: Colors.deepPurple);
   Widget build(BuildContext context) {
-    return Scaffold(
+    if(widget.data.isEmpty) return Scaffold(
+          backgroundColor: Color(0xFFFEF9FF),
+          appBar: AppBar(
+              toolbarHeight: 70,
+              backgroundColor: Colors.white,
+              title: Text('${widget.userName}', style: _titleFont),
+              actions: <Widget>[
+                IconButton(
+                  icon: Icon(Icons.camera_alt_outlined),
+                  color: Colors.black,
+                  iconSize: 40,
+                  onPressed: () => {scan()},
+                ),
+                IconButton(
+                  onPressed: () => {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => GenerateScreen()))
+                  },
+                  color: Colors.black,
+                  icon: Icon(Icons.qr_code_outlined),
+                  iconSize: 40,
+                )
+              ]),
+          body: Text("No friends"));
+  return Scaffold(
         backgroundColor: Color(0xFFFEF9FF),
         appBar: AppBar(
             toolbarHeight: 70,
             backgroundColor: Colors.white,
-            title: Text('Your Name', style: _titleFont),
+            title: Text('${widget.userName}', style: _titleFont),
             actions: <Widget>[
               IconButton(
                 icon: Icon(Icons.camera_alt_outlined),
@@ -82,18 +118,10 @@ class _FriendsListState extends State<FriendsList> {
             ]),
         body: _buildList());
   }
-  
-  List<dynamic> friends;
-  void getData(){
-    var mEmail = FirebaseAuth.instance.currentUser.email;
-    FirebaseFirestore.instance.collection('users').doc(mEmail).get().then((value) {
-      friends = value.data()["friends"];
-    });
-  }
   Widget _buildList() {
-    /*return ListView.builder(
+    return ListView.builder(
         padding: EdgeInsets.all(0.0),
-        itemCount: _friends.length,
+        itemCount: widget.data.length,
         itemBuilder: (context, i) {
           //тут дата
             return Padding(
@@ -103,13 +131,14 @@ class _FriendsListState extends State<FriendsList> {
                     color: Color(0xFFFEF9FF),
                   ),
                   child: ListTile(
-                    title: Text('Date (last visited)', style: _dateFont),
+                    title: Text('${widget.data[i].dates}', style: _dateFont),
+                    subtitle: _buildRow(widget.data[i].friendName, int.parse(widget.data[i].mood)),
                   )),
             );
           }
+    );
           //тут друг
-          return _buildRow(_friends[index], _moods[index]);
-        });*/
+
   }
 
   Widget _buildRow(String text, int mood) {
@@ -178,23 +207,8 @@ class _FriendsListState extends State<FriendsList> {
     }
   }
   void addFriend(String name) async {
-    var mEmail = FirebaseAuth.instance.currentUser.email;
-    FirebaseFirestore.instance
-        .collection('users_friends')
-        .doc(mEmail)
-        .get()
-        .then((value) {
-      List<dynamic> list = value.data()["friends"];
-      list.add(name);
-      applyChanges(list);
-    });
-  }
-
-  void applyChanges(List<dynamic> friendsList) {
-    var mEmail = FirebaseAuth.instance.currentUser.email;
-    FirebaseFirestore.instance
-        .collection('users_friends')
-        .doc(mEmail)
-        .update({"friends": friendsList});
+    final mEmail = FirebaseAuth.instance.currentUser.email;
+    FirebaseFirestore.instance.collection("users_friends").doc(mEmail).update({"friends":FieldValue.arrayUnion([name])});
+    FirebaseFirestore.instance.collection("users_friends").doc(name).update({"friends":FieldValue.arrayUnion([mEmail])});
   }
 }
