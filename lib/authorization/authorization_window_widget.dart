@@ -17,6 +17,7 @@ class AuthorizationWindowWidgetState extends State<AuthorizationWindowWidget> {
   TextEditingController loginController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   FirebaseAuth auth = FirebaseAuth.instance;
+
   AuthorizationWindowWidgetState(bool passVis) {
     _passwordVisible = passVis;
   }
@@ -30,11 +31,14 @@ class AuthorizationWindowWidgetState extends State<AuthorizationWindowWidget> {
           resizeToAvoidBottomInset: false,
           body: Padding(
             padding: EdgeInsets.only(
-                left: 60.0, top: 20.0, right: 60.0, bottom: 20.0),
+                left: 60.0, top: 60.0, right: 60.0, bottom: 20.0),
             child: Stack(
               children: [
                 //TODO добавьте сюда лого приложения
-
+                Image.asset(
+                  'assets/logo.jpg',
+                  height: 256,
+                ),
                 //Центральный блок
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -83,7 +87,7 @@ class AuthorizationWindowWidgetState extends State<AuthorizationWindowWidget> {
                       shape: RoundedRectangleBorder(
                           side: BorderSide(color: Colors.transparent),
                           borderRadius:
-                          BorderRadius.all(Radius.circular(10.0))),
+                              BorderRadius.all(Radius.circular(10.0))),
                     )
                   ],
                 ),
@@ -112,7 +116,7 @@ class AuthorizationWindowWidgetState extends State<AuthorizationWindowWidget> {
                               shape: RoundedRectangleBorder(
                                   side: BorderSide(color: Colors.transparent),
                                   borderRadius:
-                                  BorderRadius.all(Radius.circular(10.0))),
+                                      BorderRadius.all(Radius.circular(10.0))),
                             )
                           ],
                         )))
@@ -124,7 +128,7 @@ class AuthorizationWindowWidgetState extends State<AuthorizationWindowWidget> {
 
   //TODO Напишите функцию
   ///Восстановление пароля
-   void onForgotPassword() {
+  void onForgotPassword() {
     auth.sendPasswordResetEmail(email: loginController.text);
     //TODO тостик по мылу отправлен ссылка на восстановление пароля
   }
@@ -142,10 +146,9 @@ class AuthorizationWindowWidgetState extends State<AuthorizationWindowWidget> {
   ///Авторизация
   void login() async {
     try {
-      UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email:loginController.text,
-          password: passwordController.text
-      );
+      UserCredential userCredential = await FirebaseAuth.instance
+          .signInWithEmailAndPassword(
+              email: loginController.text, password: passwordController.text);
       Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
