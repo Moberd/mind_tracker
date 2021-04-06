@@ -122,9 +122,20 @@ class CalendarWindowWidgetState extends State<CalendarWindowWidget> {
     Navigator.push(
       context,
       MaterialPageRoute(
-          builder: (context) =>
-              DayInformationWidget(d, thoughts[d].thoughts, thoughts[d].mark)),
-    );
+          builder: (context)
+          {
+            if(!thoughts.containsKey(d))
+              thoughts[d]=new BaseData(d, new List<String>(), 0);
+
+            if(thoughts[d].thoughts == null)
+              thoughts[d].thoughts = new List<String>();
+            if(thoughts[d].mark == null)
+              thoughts[d].mark=0;
+            return DayInformationWidget(d, thoughts[d].thoughts, thoughts[d].mark);  }
+
+
+          ));
+
   }
 
   @override
