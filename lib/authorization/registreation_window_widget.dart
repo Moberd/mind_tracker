@@ -16,28 +16,28 @@ class RegistrationWindowWidgetState extends State<RegistrationWindowWidget> {
   bool _passwordVisible;
   TextEditingController loginController = TextEditingController();
   TextEditingController passwordController1 = TextEditingController();
-  TextEditingController passwordController2 = TextEditingController();
+  TextEditingController nameController = TextEditingController();
 
   RegistrationWindowWidgetState(bool passVis) {
     _passwordVisible = passVis;
   }
 
-/*Кто будет доставать отсюда пароли и тд, инструкция
-https://coderoad.ru/61538657/%D0%9A%D0%B0%D0%BA-%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B8%D1%82%D1%8C-%D0%B7%D0%BD%D0%B0%D1%87%D0%B5%D0%BD%D0%B8%D0%B5-%D1%81-TextFormField-%D0%BF%D0%BE-Flutter
- */
-
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset: true,
       backgroundColor: Color(0xFFFEF9FF),
       appBar: AppBar(title: Text("Registration")),
       body: Padding(
         padding:
             EdgeInsets.only(left: 60.0, top: 20.0, right: 60.0, bottom: 20.0),
         child: Stack(
+          alignment: AlignmentDirectional.topCenter,
           children: [
             //TODO добавьте сюда лого приложения
-
+            Image.asset(
+                  'assets/logo.jpg',
+                  height: 256,
+                ),
             //Центральный блок
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -58,7 +58,6 @@ https://coderoad.ru/61538657/%D0%9A%D0%B0%D0%BA-%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D
                     //кнопка показа пароля
                     suffixIcon: IconButton(
                         icon: Icon(
-                          // Based on passwordVisible state choose the icon
                           _passwordVisible
                               ? Icons.visibility
                               : Icons.visibility_off,
@@ -74,25 +73,8 @@ https://coderoad.ru/61538657/%D0%9A%D0%B0%D0%BA-%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D
 
                 //Поле пароля 2
                 TextFormField(
-                  controller: passwordController2,
-                  obscureText: _passwordVisible,
-                  decoration: new InputDecoration(
-                    labelText: "Repeat password",
-                    /*//кнопка показа пароля
-                    suffixIcon: IconButton(
-                        icon: Icon(
-                          // Based on passwordVisible state choose the icon
-                          _passwordVisible
-                              ? Icons.visibility
-                              : Icons.visibility_off,
-                          color: Theme.of(context).primaryColorDark,
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            _passwordVisible = !_passwordVisible;
-                          });
-                        }),*/
-                  ),
+                  controller: nameController,
+                  decoration: new InputDecoration(labelText: "Your Name"),
                 ),
 
 
@@ -117,10 +99,8 @@ https://coderoad.ru/61538657/%D0%9A%D0%B0%D0%BA-%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D
     );
   }
   bool checkPassword(){
-    //TODO проверка паролей
     return true;
   }
-  //TODO реализуйте регистрацию
   Future<void>  register()
   async {
     if(checkPassword()){
@@ -146,7 +126,7 @@ https://coderoad.ru/61538657/%D0%9A%D0%B0%D0%BA-%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D
   }
   Future<void> addUser(CollectionReference users) {
     // Call the user's CollectionReference to add a new user
-    return users.doc(loginController.text).set({"friends":[],"lastvisited":"","lastmark":""})
+    return users.doc(loginController.text).set({"friends":[],"lastvisited":"","lastmark":"","name":nameController.text})
         .then((value) => print("User Added"))
         .catchError((error) => print("Failed to add user: $error"));
   }

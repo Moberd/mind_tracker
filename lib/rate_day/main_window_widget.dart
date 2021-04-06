@@ -77,9 +77,10 @@ class _MainWindowWidgetState extends State<MainWindowWidget> {
                   ),
                   Flexible(
                     child: Stack(
+                      alignment: AlignmentDirectional.center,
                       children: <Widget>[
                         Padding(
-                          padding: const EdgeInsets.only(left: 50.0),
+                          padding: const EdgeInsets.only(left: 0),
                           child: Image.asset(
                             'assets/meditation_3.gif',
                             height: 250,

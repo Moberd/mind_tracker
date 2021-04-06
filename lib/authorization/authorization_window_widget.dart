@@ -33,12 +33,10 @@ class AuthorizationWindowWidgetState extends State<AuthorizationWindowWidget> {
             padding: EdgeInsets.only(
                 left: 60.0, top: 60.0, right: 60.0, bottom: 20.0),
             child: Stack(
+              alignment: AlignmentDirectional.topCenter,
               children: [
                 //TODO добавьте сюда лого приложения
-                Image.asset(
-                  'assets/logo.jpg',
-                  height: 256,
-                ),
+                
                 //Центральный блок
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -126,15 +124,10 @@ class AuthorizationWindowWidgetState extends State<AuthorizationWindowWidget> {
         ));
   }
 
-  //TODO Напишите функцию
-  ///Восстановление пароля
   void onForgotPassword() {
     auth.sendPasswordResetEmail(email: loginController.text);
-    //TODO тостик по мылу отправлен ссылка на восстановление пароля
   }
 
-  //TODO написать страницу регистрации
-  ///Переход на страницу регистрации
   static void onRegister(BuildContext context) {
     Navigator.push(
       context,
@@ -142,8 +135,6 @@ class AuthorizationWindowWidgetState extends State<AuthorizationWindowWidget> {
     );
   }
 
-  //TODO добавьте функцию авторизации
-  ///Авторизация
   void login() async {
     try {
       UserCredential userCredential = await FirebaseAuth.instance
