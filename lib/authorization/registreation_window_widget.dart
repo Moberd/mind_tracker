@@ -97,7 +97,7 @@ class RegistrationWindowWidgetState extends State<RegistrationWindowWidget> {
           ],
         ),
       ),
-    );
+    ));
   }
   bool checkPassword(){
     return true;
