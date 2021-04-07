@@ -11,8 +11,6 @@ import 'package:intl/intl.dart';
 import 'package:mind_tracker/Types/FriendsData.dart';
 import 'package:mind_tracker/share/generate_qr.dart';
 
-
-
 class FriendListWrapper extends StatefulWidget {
   @override
   _FriendListWrapperState createState() => _FriendListWrapperState();
@@ -23,42 +21,54 @@ class _FriendListWrapperState extends State<FriendListWrapper> {
   Widget build(BuildContext context) {
     String email = FirebaseAuth.instance.currentUser.email;
     return new StreamBuilder<DocumentSnapshot>(
-      stream: FirebaseFirestore.instance.collection("users_friends").doc(email).snapshots(),
-      builder: (context,myDoc){
-        if(myDoc == null) return new Center(child: CircularProgressIndicator(),);
-        if(myDoc.data==null)return new Center(child: CircularProgressIndicator(),);
-        if(myDoc.data.data()==null)return new Center(child: CircularProgressIndicator(),);
+      stream: FirebaseFirestore.instance
+          .collection("users_friends")
+          .doc(email)
+          .snapshots(),
+      builder: (context, myDoc) {
+        if (myDoc == null)
+          return new Center(
+            child: CircularProgressIndicator(),
+          );
+        if (myDoc.data == null)
+          return new Center(
+            child: CircularProgressIndicator(),
+          );
+        if (myDoc.data.data() == null)
+          return new Center(
+            child: CircularProgressIndicator(),
+          );
         String userName = myDoc.data.data()["name"];
         return new FutureBuilder<QuerySnapshot>(
-          future:FirebaseFirestore.instance.collection("users_friends").where("friends",arrayContainsAny: [email]).get(),
-          builder:(BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot){
-            if(!snapshot.hasData) return new Text("Loading");
+          future: FirebaseFirestore.instance
+              .collection("users_friends")
+              .where("friends", arrayContainsAny: [email]).get(),
+          builder:
+              (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+            if (!snapshot.hasData) return new Text("Loading");
             List<FriendsData> data = [];
-            for(DocumentSnapshot doc in snapshot.data.docs){
-              if(doc.data()["lastmark"]==""){
-                data.add(new FriendsData("01-01-1969",doc.data()["name"],5));
-              }
-              else {
-                data.add(new FriendsData(
-                    doc.data()["lastvisited"], doc.data()["name"],
-                    doc.data()["lastmark"]));
+            for (DocumentSnapshot doc in snapshot.data.docs) {
+              if (doc.data()["lastmark"] == "") {
+                data.add(new FriendsData("01-01-1969", doc.data()["name"], 5));
+              } else {
+                data.add(new FriendsData(doc.data()["lastvisited"],
+                    doc.data()["name"], doc.data()["lastmark"]));
               }
             }
-            return FriendsList(userName: userName,data: data,);
+            return FriendsList(
+              userName: userName,
+              data: data,
+            );
           },
         );
       },
     );
-
   }
 }
-
-
 
 class FriendsList extends StatefulWidget {
   final String userName;
   final List<FriendsData> data;
-
 
   const FriendsList({Key key, this.userName, this.data}) : super(key: key);
   @override
@@ -69,34 +79,36 @@ class _FriendsListState extends State<FriendsList> {
   final _titleFont =
       TextStyle(fontSize: 30.0, color: Color.fromRGBO(0, 0, 0, 1));
   final _mainFont =
-
       TextStyle(fontSize: 24.0, color: Color.fromRGBO(0, 0, 0, 1));
-  final _dateFont = TextStyle(fontSize: 24.0, color: Colors.deepPurple);
-  SplayTreeMap<DateTime,List<FriendsData>> generateMap(){
-    SplayTreeMap<DateTime,List<FriendsData>> result =  SplayTreeMap<DateTime,List<FriendsData>>((a,b){return a.compareTo(b)*(-1);});
+  final _dateFont = TextStyle(fontSize: 28.0, color: Colors.deepPurple);
+  SplayTreeMap<DateTime, List<FriendsData>> generateMap() {
+    SplayTreeMap<DateTime, List<FriendsData>> result =
+        SplayTreeMap<DateTime, List<FriendsData>>((a, b) {
+      return a.compareTo(b) * (-1);
+    });
     final data = widget.data;
-    for(var friend in data){
+    for (var friend in data) {
       List<FriendsData> t = [];
       final date = new DateFormat("dd-MM-yyy").parse(friend.dates);
-      if(result[date]!=null){
+      if (result[date] != null) {
         t = result[date];
         t.add(new FriendsData(friend.dates, friend.friendName, friend.mood));
-      }
-      else{
+      } else {
         t.add(new FriendsData(friend.dates, friend.friendName, friend.mood));
       }
       result[date] = t;
     }
     return result;
   }
+
   Widget build(BuildContext context) {
-    print(generateMap());
-    if(widget.data.isEmpty) return Scaffold(
+    if (widget.data.isEmpty)
+      return Scaffold(
           backgroundColor: Color(0xFFFEF9FF),
           appBar: AppBar(
-              toolbarHeight: 70,
+              toolbarHeight: 60,
               backgroundColor: Colors.white,
-              title: Text('${widget.userName}', style: _titleFont), //TODO МИША НАВЕДИ КРАСОТУ
+              title: Text('${widget.userName}', style: _titleFont),
               actions: <Widget>[
                 IconButton(
                   icon: Icon(Icons.camera_alt_outlined),
@@ -106,19 +118,25 @@ class _FriendsListState extends State<FriendsList> {
                 ),
                 IconButton(
                   onPressed: () => {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => GenerateScreen()))
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => GenerateScreen()))
                   },
                   color: Colors.black,
                   icon: Icon(Icons.qr_code_outlined),
                   iconSize: 40,
                 )
               ]),
-          body: Text("No friends")); //TODO МИША НАВЕДИ КРАСОТУ
-  return Scaffold(
+          body: Center(
+              child: Text(
+            "Use QR to add new friends",
+            style: _mainFont,
+          )));
+    return Scaffold(
         backgroundColor: Color(0xFFFEF9FF),
         appBar: AppBar(
-            toolbarHeight: 70,
+            toolbarHeight: 60,
             backgroundColor: Colors.white,
             title: Text('${widget.userName}', style: _titleFont),
             actions: <Widget>[
@@ -140,32 +158,40 @@ class _FriendsListState extends State<FriendsList> {
             ]),
         body: _buildList());
   }
-  Widget _buildList() {
-    return ListView.builder(
-        padding: EdgeInsets.all(0.0),
-        itemCount: widget.data.length,
-        itemBuilder: (context, i) {
-          //тут дата
-            return Padding(
-              padding: const EdgeInsets.all(4),
-              child: Container(
-                  decoration: BoxDecoration(
-                    color: Color(0xFFFEF9FF),
-                  ),
-                  child: ListTile(
-                    title: Text('${widget.data[i].dates}', style: _dateFont), //TODO МИША НАВЕДИ КРАСОТУ
-                    subtitle: _buildRow(widget.data[i].friendName, widget.data[i].mood),//TODO МИША НАВЕДИ КРАСОТУ
-                  )),
-            );
-          }
-    );
-          //тут друг
 
+  Widget _buildList() {
+    var map = generateMap();
+    return ListView.builder(
+        itemCount: map.length,
+        itemBuilder: (context, i) {
+          return Container(
+            decoration: BoxDecoration(
+              color: Color(0xFFFEF9FF),
+            ),
+            child: ListTile(
+                title: ListTile(
+                    title: Text(
+                        'Last visit on ${map.keys.elementAt(i).day}-${map.keys.elementAt(i).month}-${map.keys.elementAt(i).year}',
+                        style: _dateFont)),
+                subtitle: _buildRows(map[map.keys.elementAt(i)])),
+          );
+        });
   }
 
-  Widget _buildRow(String text, int mood) {
+  Widget _buildRows(List<FriendsData> list) {
+    print(list.toString());
+    return ListView.builder(
+        physics: ScrollPhysics(),
+        shrinkWrap: true,
+        itemCount: list.length,
+        itemBuilder: (context, i) {
+          return buildFriendTile(list[i]);
+        });
+  }
+
+  Widget buildFriendTile(FriendsData friend) {
     Icon i;
-    switch (mood) {
+    switch (friend.mood) {
       case 0:
         i = Icon(Icons.thumb_down, color: Colors.deepPurple);
         break;
@@ -204,7 +230,7 @@ class _FriendsListState extends State<FriendsList> {
     return Card(
       child: ListTile(
         title: Text(
-          text,
+          friend.friendName,
           style: _mainFont,
         ),
         trailing: i,
@@ -228,9 +254,14 @@ class _FriendsListState extends State<FriendsList> {
       setState(() => {});
     }
   }
+
   void addFriend(String name) async {
     final mEmail = FirebaseAuth.instance.currentUser.email;
-    FirebaseFirestore.instance.collection("users_friends").doc(mEmail).update({"friends":FieldValue.arrayUnion([name])});
-    FirebaseFirestore.instance.collection("users_friends").doc(name).update({"friends":FieldValue.arrayUnion([mEmail])});
+    FirebaseFirestore.instance.collection("users_friends").doc(mEmail).update({
+      "friends": FieldValue.arrayUnion([name])
+    });
+    FirebaseFirestore.instance.collection("users_friends").doc(name).update({
+      "friends": FieldValue.arrayUnion([mEmail])
+    });
   }
 }
