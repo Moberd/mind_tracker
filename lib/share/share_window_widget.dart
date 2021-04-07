@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -5,6 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:barcode_scan_fix/barcode_scan.dart';
+import 'package:intl/intl.dart';
 import 'package:mind_tracker/Types/FriendsData.dart';
 import 'package:mind_tracker/share/generate_qr.dart';
 
@@ -51,15 +54,6 @@ class _FriendListWrapperState extends State<FriendListWrapper> {
 }
 
 
-class ShareWindowWidget extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: FriendsList(),
-    );
-  }
-}
 
 class FriendsList extends StatefulWidget {
   final String userName;
@@ -75,9 +69,28 @@ class _FriendsListState extends State<FriendsList> {
   final _titleFont =
       TextStyle(fontSize: 30.0, color: Color.fromRGBO(0, 0, 0, 1));
   final _mainFont =
+
       TextStyle(fontSize: 24.0, color: Color.fromRGBO(0, 0, 0, 1));
   final _dateFont = TextStyle(fontSize: 24.0, color: Colors.deepPurple);
+  SplayTreeMap<DateTime,List<FriendsData>> generateMap(){
+    SplayTreeMap<DateTime,List<FriendsData>> result =  SplayTreeMap<DateTime,List<FriendsData>>((a,b){return a.compareTo(b)*(-1);});
+    final data = widget.data;
+    for(var friend in data){
+      List<FriendsData> t = [];
+      final date = new DateFormat("dd-MM-yyy").parse(friend.dates);
+      if(result[date]!=null){
+        t = result[date];
+        t.add(new FriendsData(friend.dates, friend.friendName, friend.mood));
+      }
+      else{
+        t.add(new FriendsData(friend.dates, friend.friendName, friend.mood));
+      }
+      result[date] = t;
+    }
+    return result;
+  }
   Widget build(BuildContext context) {
+    print(generateMap());
     if(widget.data.isEmpty) return Scaffold(
           backgroundColor: Color(0xFFFEF9FF),
           appBar: AppBar(

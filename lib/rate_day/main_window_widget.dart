@@ -88,7 +88,9 @@ class _MainWindowWidgetState extends State<MainWindowWidget> {
                         ),
                         Padding(
                           padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-                          child: ThoughtsList(),
+                          child: ThoughtsList(
+                            touch: () => setState(() {}),
+                          ),
                           ),
                       ]
                       ),
@@ -132,9 +134,8 @@ class HowAreYouText extends StatelessWidget {
 }
 
 class ThoughtsList extends StatefulWidget {
-  List<String> thoughts =[];
-
-  ThoughtsList({Key key, this.thoughts}) : super(key: key);
+  final void Function() touch;
+  ThoughtsList({Key key, this.touch}) : super(key: key);
   @override
   _ThoughtsListState createState() => _ThoughtsListState();
 }
@@ -158,10 +159,10 @@ class _ThoughtsListState extends State<ThoughtsList> {
              ref.update({"thoughts":thoughtsList});
 
           });
-
           ScaffoldMessenger
               .of(context)
               .showSnackBar(SnackBar(content: Text("Thought deleted")));
+
         },
         child: Opacity(
           opacity: 0.7,

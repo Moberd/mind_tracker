@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:mind_tracker/statistics/day_information_widget.dart';
 
 import '../home.dart';
@@ -24,19 +25,18 @@ class RegistrationWindowWidgetState extends State<RegistrationWindowWidget> {
 
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
       backgroundColor: Color(0xFFE9DDF6),
       appBar: AppBar(title: Text("Registration")),
       body: Padding(
         padding:
-            EdgeInsets.only(left: 60.0, top: 20.0, right: 60.0, bottom: 20.0),
+        EdgeInsets.only(left: 60.0, top: 20.0, right: 60.0, bottom: 20.0),
         child: Column(
           children: [
             //TODO добавьте сюда лого приложения
             Image.asset(
-                  'assets/logo.png',
-                  height: 256,
-                ),
+              'assets/logo.png',
+              height: 256,
+            ),
             //Центральный блок
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -60,7 +60,9 @@ class RegistrationWindowWidgetState extends State<RegistrationWindowWidget> {
                           _passwordVisible
                               ? Icons.visibility
                               : Icons.visibility_off,
-                          color: Theme.of(context).primaryColorDark,
+                          color: Theme
+                              .of(context)
+                              .primaryColorDark,
                         ),
                         onPressed: () {
                           setState(() {
@@ -97,40 +99,67 @@ class RegistrationWindowWidgetState extends State<RegistrationWindowWidget> {
       ),
     );
   }
-  bool checkPassword(){
+
+  bool checkPassword() {
     return true;
   }
-  Future<void>  register()
-  async {
-    if(checkPassword()){
-    try {
-      UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
-          email: loginController.text,
-          password: passwordController1.text
-      );
-      CollectionReference usersFriends = FirebaseFirestore.instance.collection("users_friends");
-      addUserFriends(usersFriends);
-      Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
 
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'weak-password') {
-        print('The password provided is too weak.');
-      } else if (e.code == 'email-already-in-use') {
-        print('The account already exists for that email.');
+  Future<void> register() async {
+    if (checkPassword()) {
+      try {
+        UserCredential userCredential = await FirebaseAuth.instance
+            .createUserWithEmailAndPassword(
+            email: loginController.text,
+            password: passwordController1.text
+        );
+        CollectionReference usersFriends = FirebaseFirestore.instance
+            .collection("users_friends");
+        CollectionReference user = FirebaseFirestore.instance.collection(
+            "users");
+        addUserFriends(usersFriends);
+        addUser(user);
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => Home()));
+      } on FirebaseAuthException catch (e) {
+        if (e.code == 'weak-password') {
+          print('The password provided is too weak.');
+        } else if (e.code == 'email-already-in-use') {
+          print('The account already exists for that email.');
+        }
+      } catch (e) {
+        print(e);
       }
-    } catch (e) {
-      print(e);
-    }}
+    }
   }
+
   Future<void> addUserFriends(CollectionReference users) {
     // Call the user's CollectionReference to add a new user
-    if(nameController.text.isEmpty){
+    if (nameController.text.isEmpty) {
       nameController.text = "Brandon Floppa";
     }
-    return users.doc(loginController.text).set({"friends":[],"lastvisited":"","lastmark":"","name":nameController.text})
+    final DateTime now = DateTime.now();
+    final DateFormat formatter = DateFormat('dd-MM-yyyy');
+    final String formatted = formatter.format(now);
+    return users.doc(loginController.text).set({
+
+      "friends": [],
+      "lastvisited": formatted,
+      "lastmark": 5,
+      "name": nameController.text
+    })
         .then((value) => print("User Added"))
         .catchError((error) => print("Failed to add user: $error"));
   }
 
+  Future<void> addUser(CollectionReference users) {
+    // Call the user's CollectionReference to add a new user
+    final DateTime now = DateTime.now();
+    final DateFormat formatter = DateFormat('dd-MM-yyyy');
+    final String formatted = formatter.format(now);
+    return users.doc(loginController.text).collection("days").doc(formatted)
+        .set({"thoughts": [], "mark": 5})
+        .then((value) => print("User Added"))
+        .catchError((error) => print("Failed to add user: $error"));
+  }
 
 }
