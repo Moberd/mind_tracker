@@ -29,96 +29,99 @@ class AuthorizationWindowWidgetState extends State<AuthorizationWindowWidget> {
         },
         child: Scaffold(
           backgroundColor: Color(0xFFE9DDF6),
-          resizeToAvoidBottomInset: false,
-          body: Padding(
-            padding: EdgeInsets.only(
-                left: 60.0, top: 60.0, right: 60.0, bottom: 20.0),
-            child: Column(
-              children: [
-                Image.asset(
-                  'assets/logo.png',
-                  height: 256,
-                ),
-                //Центральный блок
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    //Поле логина
-                    TextFormField(
-                      controller: loginController,
-                      decoration: new InputDecoration(labelText: "Email"),
-                      keyboardType: TextInputType.emailAddress,
-                    ),
-
-                    //Поле пароля
-                    TextFormField(
-                      controller: passwordController,
-                      obscureText: _passwordVisible,
-                      decoration: new InputDecoration(
-                        labelText: "Password",
-
-                        //кнопка показа пароля
-                        suffixIcon: IconButton(
-                            icon: Icon(
-                              _passwordVisible
-                                  ? Icons.visibility
-                                  : Icons.visibility_off,
-                              color: Theme.of(context).primaryColorDark,
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                _passwordVisible = !_passwordVisible;
-                              });
-                            }),
+          resizeToAvoidBottomInset: true,
+          body: SingleChildScrollView(
+            reverse: true,
+            child: Padding(
+              padding: EdgeInsets.only(
+                  left: 60.0, top: 60.0, right: 60.0, bottom: 20.0),
+              child: Column(
+                children: [
+                  Image.asset(
+                    'assets/logo.png',
+                    height: 256,
+                  ),
+                  //Центральный блок
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      //Поле логина
+                      TextFormField(
+                        controller: loginController,
+                        decoration: new InputDecoration(labelText: "Email"),
+                        keyboardType: TextInputType.emailAddress,
                       ),
-                    ),
 
-                    //кнопка восстановления пароля
-                    FlatButton(
-                      child: Align(
-                        alignment: Alignment.centerRight,
-                        child: Text(
-                          "Forgot password",
+                      //Поле пароля
+                      TextFormField(
+                        controller: passwordController,
+                        obscureText: _passwordVisible,
+                        decoration: new InputDecoration(
+                          labelText: "Password",
+
+                          //кнопка показа пароля
+                          suffixIcon: IconButton(
+                              icon: Icon(
+                                _passwordVisible
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
+                                color: Theme.of(context).primaryColorDark,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  _passwordVisible = !_passwordVisible;
+                                });
+                              }),
                         ),
                       ),
-                      onPressed: onForgotPassword,
-                      textColor: Colors.grey,
-                      shape: RoundedRectangleBorder(
-                          side: BorderSide(color: Colors.transparent),
-                          borderRadius:
-                              BorderRadius.all(Radius.circular(10.0))),
-                    )
-                  ],
-                ),
 
-                //Нижний блок
-                Padding(
-                    padding: EdgeInsets.fromLTRB(10, 10, 10, 50),
-                    child: Align(
-                        alignment: Alignment.bottomCenter,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            //Кнопка авторизации
-                            MaterialButton(
-                              onPressed: login,
-                              color: Color.fromARGB(255, 159, 159, 237),
-                              minWidth: 200.0,
-                              child: Text("Login"),
-                            ),
-                            //Кнопка регистрации
-                            FlatButton(
-                              child: Text("Register"),
-                              onPressed: () => onRegister(context),
-                              textColor: Colors.grey,
-                              shape: RoundedRectangleBorder(
-                                  side: BorderSide(color: Colors.transparent),
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(10.0))),
-                            )
-                          ],
-                        )))
-              ],
+                      //кнопка восстановления пароля
+                      FlatButton(
+                        child: Align(
+                          alignment: Alignment.centerRight,
+                          child: Text(
+                            "Forgot password",
+                          ),
+                        ),
+                        onPressed: onForgotPassword,
+                        textColor: Colors.grey,
+                        shape: RoundedRectangleBorder(
+                            side: BorderSide(color: Colors.transparent),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(10.0))),
+                      )
+                    ],
+                  ),
+
+                  //Нижний блок
+                  Padding(
+                      padding: EdgeInsets.fromLTRB(10, 10, 10, 50),
+                      child: Align(
+                          alignment: Alignment.bottomCenter,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              //Кнопка авторизации
+                              MaterialButton(
+                                onPressed: login,
+                                color: Color.fromARGB(255, 159, 159, 237),
+                                minWidth: 200.0,
+                                child: Text("Login"),
+                              ),
+                              //Кнопка регистрации
+                              FlatButton(
+                                child: Text("Register"),
+                                onPressed: () => onRegister(context),
+                                textColor: Colors.grey,
+                                shape: RoundedRectangleBorder(
+                                    side: BorderSide(color: Colors.transparent),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(10.0))),
+                              )
+                            ],
+                          )))
+                ],
+              ),
             ),
           ),
         ));
