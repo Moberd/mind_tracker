@@ -31,15 +31,15 @@ class _CalendarWindowWidgetWrapperState extends State<CalendarWindowWidgetWrappe
           try{
             mark = doc.data()["mark"];
           }catch(e){
-            int mark = 0;
+            mark = 0;
           }
 
           List<String> thoughtsLst;
           try {
-            List<String> thoughtsLst = new List<String>.from(
+          thoughtsLst = new List<String>.from(
                 doc.data()["thoughts"]);
           }catch(e){
-            List<String> thoughtsLst = [];
+            thoughtsLst = [];
           }
           final date = new DateTime(int.parse(ddMMyyyy[2]),int.parse(ddMMyyyy[1]),int.parse(ddMMyyyy[0]));
           thoughts[date] = new BaseData(date, thoughtsLst, mark);
