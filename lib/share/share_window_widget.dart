@@ -81,6 +81,7 @@ class _FriendsListState extends State<FriendsList> {
   final _mainFont =
       TextStyle(fontSize: 24.0, color: Color.fromRGBO(0, 0, 0, 1));
   final _dateFont = TextStyle(fontSize: 28.0, color: Colors.deepPurple);
+  
   SplayTreeMap<DateTime, List<FriendsData>> generateMap() {
     SplayTreeMap<DateTime, List<FriendsData>> result =
         SplayTreeMap<DateTime, List<FriendsData>>((a, b) {
@@ -164,6 +165,8 @@ class _FriendsListState extends State<FriendsList> {
     return ListView.builder(
         itemCount: map.length,
         itemBuilder: (context, i) {
+          final DateFormat formatter = DateFormat('dd-MM-yyyy');
+          final String formatted = formatter.format(map.keys.elementAt(i));
           return Container(
             decoration: BoxDecoration(
               color: Color(0xFFFEF9FF),
@@ -171,7 +174,7 @@ class _FriendsListState extends State<FriendsList> {
             child: ListTile(
                 title: ListTile(
                     title: Text(
-                        'Last visit on ${map.keys.elementAt(i).day}-${map.keys.elementAt(i).month}-${map.keys.elementAt(i).year}',
+                        'Last visit on $formatted',
                         style: _dateFont)),
                 subtitle: _buildRows(map[map.keys.elementAt(i)])),
           );
