@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -30,7 +30,12 @@ class _MainWindowWidgetState extends State<MainWindowWidget> {
   TextEditingController markController;
   @override
   Widget build(BuildContext context) {
-    String email = FirebaseAuth.instance.currentUser.email;
+    String email;
+    try {
+      email = FirebaseAuth.instance.currentUser.email;
+    }catch(e){
+    }
+    print(email);
     final DateTime now = DateTime.now();
     final DateFormat formatter = DateFormat('dd-MM-yyyy');
     final String formatted = formatter.format(now);

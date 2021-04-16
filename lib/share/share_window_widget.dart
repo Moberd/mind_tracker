@@ -45,7 +45,7 @@ class _FriendListWrapperState extends State<FriendListWrapper> {
               .where("friends", arrayContainsAny: [email]).get(),
           builder:
               (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-            if (!snapshot.hasData) return new Text("Loading");
+            if (!snapshot.hasData) return Center(child: CircularProgressIndicator(),);
             List<FriendsData> data = [];
             for (DocumentSnapshot doc in snapshot.data.docs) {
               if (doc.data()["lastmark"] == "") {

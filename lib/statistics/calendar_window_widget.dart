@@ -22,8 +22,15 @@ class _CalendarWindowWidgetWrapperState extends State<CalendarWindowWidgetWrappe
     return new FutureBuilder<QuerySnapshot>(
       future:FirebaseFirestore.instance.collection("users").doc(email).collection("days").get(),
       builder:(BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot){
-        if(snapshot == null) return new Center(child: CircularProgressIndicator(),);
-        if(snapshot.data==null)return new Center(child: CircularProgressIndicator(),);
+        print(snapshot);
+        if(snapshot == null) {
+          print("just null");
+          return new Center(child: CircularProgressIndicator(),);
+        }
+        if(snapshot.data==null){
+          print("data null");
+          return new Center(child: CircularProgressIndicator(),);
+        }
         Map<DateTime,BaseData> thoughts = {};
         for(DocumentSnapshot doc in snapshot.data.docs){
           final ddMMyyyy= doc.id.split("-");
@@ -44,6 +51,7 @@ class _CalendarWindowWidgetWrapperState extends State<CalendarWindowWidgetWrappe
           final date = new DateTime(int.parse(ddMMyyyy[2]),int.parse(ddMMyyyy[1]),int.parse(ddMMyyyy[0]));
           thoughts[date] = new BaseData(date, thoughtsLst, mark);
         }
+        print(thoughts);
         return CalendarWindowWidget(thoughts: thoughts,);
       } ,
     );

@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mind_tracker/statistics/day_information_widget.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../home.dart';
 
@@ -110,6 +112,14 @@ class RegistrationWindowWidgetState extends State<RegistrationWindowWidget> {
           email: loginController.text,
           password: passwordController1.text
       );
+      if(kIsWeb) {
+        userCredential.user.getIdToken().then((value)async{
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          prefs.setBool("webauth", true);
+          prefs.setString("email", loginController.text);
+          print("token added");
+        });
+      }
       CollectionReference usersFriends = FirebaseFirestore.instance.collection("users_friends");
       addUserFriends(usersFriends);
       Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
