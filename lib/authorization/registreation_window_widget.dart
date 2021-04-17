@@ -1,3 +1,5 @@
+import 'dart:html';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -117,6 +119,7 @@ class RegistrationWindowWidgetState extends State<RegistrationWindowWidget> {
           SharedPreferences prefs = await SharedPreferences.getInstance();
           prefs.setBool("webauth", true);
           prefs.setString("email", loginController.text);
+          prefs.setString("password", passwordController1.text);
           print("token added");
         });
       }

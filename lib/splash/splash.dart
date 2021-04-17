@@ -33,24 +33,27 @@ class SplashWidgetState extends State<SplashWidget>{
           builder: (context,sharedPref){
           if(sharedPref == null){
             print("sp null");
-            return Center(child: CircularProgressIndicator(),);
+            return Center(child: CircularProgressIndicator());
           }
           if(sharedPref.data ==null){
             print("sp data null");
-            return Center(child: CircularProgressIndicator(),);
+            return Center(child: CircularProgressIndicator());
           }
           if(sharedPref.data.containsKey("webauth")&&sharedPref.data.getBool("webauth")){
             print("token ready");
             print(sharedPref.data.getBool("webauth"));
-            return FutureBuilder<User>(
-              future: FirebaseAuth.instance.authStateChanges().first,
+            return FutureBuilder<UserCredential>(
+              future: FirebaseAuth.instance.signInWithEmailAndPassword(email: sharedPref.data.getString("email"), password: sharedPref.data.getString("password")),
               builder: (context,user){
                 if(user.data!=null){
                   Future.delayed(Duration.zero, () {
                     Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
                   });
+
+                  return Center(child: CircularProgressIndicator());
+
                 }
-                return Center(child: CircularProgressIndicator(),);
+                return Center(child: CircularProgressIndicator());
 
               },
             );
@@ -63,7 +66,7 @@ class SplashWidgetState extends State<SplashWidget>{
 
           }
 
-          return Center(child: CircularProgressIndicator(),);
+          return Center(child: CircularProgressIndicator());
           }
       );
     }

@@ -149,6 +149,7 @@ class AuthorizationWindowWidgetState extends State<AuthorizationWindowWidget> {
           SharedPreferences prefs = await SharedPreferences.getInstance();
           prefs.setBool("webauth", true);
           prefs.setString("email", loginController.text);
+          prefs.setString("password", passwordController.text);
           print("token added");
       }
 
