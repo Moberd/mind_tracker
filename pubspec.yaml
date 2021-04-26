@@ -23,6 +23,7 @@ dependencies:
   cloud_firestore: ^0.14.4
   qr_flutter: "^4.0.0"
   barcode_scan_fix: ^1.0.2
+  rxdart: ^0.26.0
 
   flutter_calendar_carousel: ^1.5.3
 

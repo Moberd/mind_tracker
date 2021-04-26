@@ -3,9 +3,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mind_tracker/authorization/registreation_window_widget.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:mind_tracker/home/home.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../home.dart';
 
 class AuthorizationWindowWidget extends StatefulWidget {
   @override

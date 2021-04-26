@@ -1,5 +1,3 @@
-import 'dart:html';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +5,7 @@ import 'package:mind_tracker/statistics/day_information_widget.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../home.dart';
+import 'package:mind_tracker/home/home.dart';
 
 class RegistrationWindowWidget extends StatefulWidget {
   @override

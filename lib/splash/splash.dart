@@ -5,7 +5,7 @@ import 'package:mind_tracker/authorization/authorization_window_widget.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../home.dart';
+import 'package:mind_tracker/home/home.dart';
 
 class SplashWidget extends StatefulWidget{
   @override

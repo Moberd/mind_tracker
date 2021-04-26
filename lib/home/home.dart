@@ -1,39 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:mind_tracker/rate_day/main_window_widget.dart';
-
-import 'share/share_window_widget.dart';
-import 'statistics/calendar_window_widget.dart';
-import 'rate_day/main_window_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class Home extends StatefulWidget {
+import '../rate_day/main_window_widget.dart';
+import '../share/share_window_widget.dart';
+import '../statistics/calendar_window_widget.dart';
+import 'logic.dart';
 
+class Home extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
     return _HomeState();
   }
 }
 
-/// Сейчас новое окно/страница реализованы через PlaceHolderWidget
-/// их нужно будет переделать под наши цели
-/// не думаю, что это очень сложо
-///
-/// В лист можно засунуть разные наследники виджетов.
-/// Думаю, будет проще написать по классу на каждую страницу, чем пытаться сделать один общий шаблон под разные параметы.
-///
 class _HomeState extends State<Home> {
+  final _bloc = HomeBloc();
+
   @override
-  void initState(){
+  void initState() {
     getData();
   }
 
-  getData() async { //Получение листа из памяти
+  getData() async {
+    //Получение листа из памяти
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      thoughtsList = prefs.getStringList('thoughts_list') == null? [] : prefs.getStringList('thoughts_list');
+      thoughtsList = prefs.getStringList('thoughts_list') == null
+          ? []
+          : prefs.getStringList('thoughts_list');
     });
   }
-  int _currentIndex = 1;
+
   final List<Widget> _children = [
     CalendarWindowWidgetWrapper(),
     MainWindowWidget(),
@@ -44,12 +42,16 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return WillPopScope(
         child: Scaffold(
-          //appBar: AppBar(title: Text('page 1')), ///Закомментируйте эту строку, когда создадите нормальные окна приложения
-          body: _children[_currentIndex],
-
+          body: StreamBuilder(
+            stream: _bloc.index,
+            initialData: 1,
+            builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
+              return _children[snapshot.data];
+            },
+          ),
           bottomNavigationBar: BottomNavigationBar(
             onTap: onTabTapped,
-            currentIndex: _currentIndex,
+            currentIndex: 1,
             items: [
               ///Календарь со статистикой
               BottomNavigationBarItem(
@@ -71,8 +73,6 @@ class _HomeState extends State<Home> {
   }
 
   void onTabTapped(int index) {
-    setState(() {
-      _currentIndex = index;
-    });
+    _bloc.pageScrollEventSink.add(PageScrollEvent(index));
   }
 }
