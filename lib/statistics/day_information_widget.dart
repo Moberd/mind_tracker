@@ -89,7 +89,7 @@ class DayInformationWidgetState extends State<DayInformationWidget> {
                   ),
                   alignment: Alignment.center,
                 )
-            ), //////------------------------------------------------------------------------Тут нужно разобраться почему _date.day возвращает null
+            ),
             Flexible(
                 flex: 1,
                 child: new Text(
