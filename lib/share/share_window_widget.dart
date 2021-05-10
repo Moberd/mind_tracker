@@ -9,6 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:barcode_scan_fix/barcode_scan.dart';
 import 'package:intl/intl.dart';
 import 'package:mind_tracker/Types/FriendsData.dart';
+import 'package:mind_tracker/settings_button_logic.dart';
 import 'package:mind_tracker/share/generate_qr.dart';
 
 class FriendListWrapper extends StatefulWidget {
@@ -67,6 +68,8 @@ class _FriendListWrapperState extends State<FriendListWrapper> {
 }
 
 class FriendsList extends StatefulWidget {
+  
+  
   final String userName;
   final List<FriendsData> data;
 
@@ -76,6 +79,8 @@ class FriendsList extends StatefulWidget {
 }
 
 class _FriendsListState extends State<FriendsList> {
+
+  final SettingButtonBloc _bloc = new SettingButtonBloc();
   final _titleFont =
       TextStyle(fontSize: 30.0, color: Color.fromRGBO(0, 0, 0, 1));
   final _mainFont =
@@ -141,6 +146,12 @@ class _FriendsListState extends State<FriendsList> {
             backgroundColor: Colors.white,
             title: Text('${widget.userName}', style: _titleFont),
             actions: <Widget>[
+              IconButton(
+                icon: Icon(Icons.settings),
+                color: Colors.black,
+                iconSize: 40,
+                onPressed: () => {_bloc.statisticPageEventSink.add(new StartSettingsPageEvent(context: context))},
+              ),
               IconButton(
                 icon: Icon(Icons.camera_alt_outlined),
                 color: Colors.black,

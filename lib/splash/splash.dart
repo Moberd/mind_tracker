@@ -8,6 +8,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mind_tracker/home/home.dart';
 
 class SplashWidget extends StatefulWidget{
+
+
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState

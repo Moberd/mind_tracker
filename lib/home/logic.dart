@@ -10,6 +10,7 @@ class PageScrollEvent {
 
 class HomeBloc {
   int _currentIndex = 1;
+
   final StreamController<int> _indexStateController = StreamController<int>();
 
   StreamSink<int> get _inIndex => _indexStateController.sink;
