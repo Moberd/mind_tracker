@@ -39,6 +39,9 @@ class _HomeState extends State<Home> {
       int minute = prefs.getInt("minute") == null? TimeOfDay.now().minute:prefs.getInt("minute");
       notificationTime =TimeOfDay(hour: hour, minute: minute);
     });
+
+    SettingsLogic settingsLogic = new SettingsLogic();
+    settingsLogic.firstLaunch.add(new FirstTimeInitialization());
   }
 
   final List<Widget> _children = [

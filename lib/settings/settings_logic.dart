@@ -15,11 +15,13 @@ class TryUpdateTime {
   TryUpdateTime({this.context});
 }
 
+class FirstTimeInitialization{}
+
 TimeOfDay notificationTime;
 
 class SettingsLogic {
   TimeOfDay _timeOfDay = notificationTime;
-  bool _isEnabled = true;
+  bool _isEnabled;
   final StreamController<TimeOfDay> _timeStateController =
       StreamController<TimeOfDay>();
 
@@ -41,12 +43,18 @@ class SettingsLogic {
 
   Sink<ChangeStateEnabled> get enabledEventSink => _enabledEventController.sink;
 
+  final _firstLaunchEventController = StreamController<FirstTimeInitialization>();
+  Sink<FirstTimeInitialization> get firstLaunch => _firstLaunchEventController.sink;
+
   SettingsLogic() {
+    _isEnabled=prefs.getBool("isNotificationEnabled") == null ? true : prefs.getBool("isNotificationEnabled");
     _inEnabled.add(_isEnabled);
     _enabledEventController.stream.listen(_changeState);
     _timeChangeEventController.stream.listen(_getNewTime);
     _inTimeOfDay.add(_timeOfDay);
+    _firstLaunchEventController.stream.listen(_init);
   }
+
 
   void _changeState(ChangeStateEnabled event) {
     _isEnabled = !_isEnabled;
@@ -56,7 +64,7 @@ class SettingsLogic {
     } else {
       _disableNotifications();
     }
-
+    prefs.setBool("isNotificationEnabled", _isEnabled);
     _inEnabled.add(_isEnabled);
   }
 
@@ -76,8 +84,6 @@ class SettingsLogic {
       }
     }
   }
-
-  void _voidFunc() {}
 
   void _enableNotifications(TimeOfDay time) async {
     _disableNotifications();
@@ -113,10 +119,18 @@ class SettingsLogic {
     return scheduledDate;
   }
 
+  void _init(FirstTimeInitialization event){
+    var time =TimeOfDay.now();
+    _enableNotifications(time);
+    prefs.setInt("hours", time.hour);
+    prefs.setInt("minute", time.minute);
+  }
+
   void dispose() {
     _enabledEventController.close();
     _enabledStateController.close();
     _timeStateController.close();
     _timeChangeEventController.close();
+    _firstLaunchEventController.close();
   }
 }
