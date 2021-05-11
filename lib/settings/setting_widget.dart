@@ -67,7 +67,7 @@ class SettingsWidgetState extends State<SettingWidget> {
                             onPressed: () {
                               _bloc.updateTime.add(new TryUpdateTime(context: context));
                             },
-                            child: Text(snapshot.data.toString()),
+                            child: Text(snapshot.data.hour.toString() + ":"+snapshot.data.minute.toString()),
                             color: Colors.transparent,
                           );
                         }))
