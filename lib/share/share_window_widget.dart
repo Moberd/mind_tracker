@@ -271,11 +271,14 @@ class _FriendsListState extends State<FriendsList> {
 
   void addFriend(String name) async {
     final mEmail = FirebaseAuth.instance.currentUser.email;
-    FirebaseFirestore.instance.collection("users_friends").doc(mEmail).update({
-      "friends": FieldValue.arrayUnion([name])
-    });
-    FirebaseFirestore.instance.collection("users_friends").doc(name).update({
-      "friends": FieldValue.arrayUnion([mEmail])
-    });
+    if(name != mEmail) {
+      FirebaseFirestore.instance.collection("users_friends").doc(mEmail).update(
+          {
+            "friends": FieldValue.arrayUnion([name])
+          });
+      FirebaseFirestore.instance.collection("users_friends").doc(name).update({
+        "friends": FieldValue.arrayUnion([mEmail])
+      });
+    }
   }
 }
