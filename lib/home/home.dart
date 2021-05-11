@@ -17,12 +17,12 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   final _bloc = HomeBloc();
+  int _currentIndex = 1;
 
 
   @override
   void initState() {
     super.initState();
-    getData();
   }
 
 
@@ -30,16 +30,9 @@ class _HomeState extends State<Home> {
   getData() async {
     //Получение листа из памяти
     prefs = await SharedPreferences.getInstance();
-    setState(() {
-      thoughtsList = prefs.getStringList('thoughts_list') == null
-          ? []
-          : prefs.getStringList('thoughts_list');
-
-      int hour = prefs.getInt("hours") == null? TimeOfDay.now().hour:prefs.getInt("hours");
-      int minute = prefs.getInt("minute") == null? TimeOfDay.now().minute:prefs.getInt("minute");
-      notificationTime =TimeOfDay(hour: hour, minute: minute);
-    });
-
+    int hour = prefs.getInt("hours") == null? TimeOfDay.now().hour:prefs.getInt("hours");
+    int minute = prefs.getInt("minute") == null? TimeOfDay.now().minute:prefs.getInt("minute");
+    notificationTime =TimeOfDay(hour: hour, minute: minute);
     SettingsLogic settingsLogic = new SettingsLogic();
     settingsLogic.firstLaunch.add(new FirstTimeInitialization());
   }
@@ -53,31 +46,26 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-        child: StreamBuilder(
-          stream: _bloc.index,
-          initialData: 1,
-          builder: (context, snapshot) {
-            return Scaffold(
-              body: _children[snapshot.data],
-              bottomNavigationBar: BottomNavigationBar(
-                onTap: onTabTapped,
-                currentIndex: snapshot.data,
-                items: [
-                  ///Календарь со статистикой
-                  BottomNavigationBarItem(
-                      icon: new Icon(Icons.calendar_today), label: 'Calendar'),
+        child:
+        Scaffold(
+         body: _children[_currentIndex],
+          bottomNavigationBar: BottomNavigationBar(
+            onTap: onTabTapped,
+            currentIndex: _currentIndex,
+            items: [
+              ///Календарь со статистикой
+              BottomNavigationBarItem(
+                  icon: new Icon(Icons.calendar_today), label: 'Calendar'),
 
-                  ///Главный экран с вводом информации
-                  BottomNavigationBarItem(
-                      icon: new Icon(Icons.home), label: 'Home'),
+              ///Главный экран с вводом информации
+              BottomNavigationBarItem(
+                  icon: new Icon(Icons.home), label: 'Home'),
 
-                  /// социальная часть
-                  BottomNavigationBarItem(
-                      icon: new Icon(Icons.account_box), label: 'Share')
-                ],
-              ),
-            );
-          },
+              /// социальная часть
+              BottomNavigationBarItem(
+                  icon: new Icon(Icons.account_box), label: 'Share')
+            ],
+          ),
         ),
         onWillPop: () async {
           return false;
@@ -85,6 +73,8 @@ class _HomeState extends State<Home> {
   }
 
   void onTabTapped(int index) {
-    _bloc.pageScrollEventSink.add(PageScrollEvent(index));
+    setState(() {
+      _currentIndex = index;
+    });
   }
 }
