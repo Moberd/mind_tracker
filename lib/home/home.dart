@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mind_tracker/authorization/auth_bloc.dart';
 import 'package:mind_tracker/rate_day/main_window_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:mind_tracker/settings/settings_logic.dart';
 import '../rate_day/main_window_widget.dart';
 import '../share/share_window_widget.dart';
 import '../statistics/calendar_window_widget.dart';
 import 'logic.dart';
 
+SharedPreferences prefs;
 class Home extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
@@ -26,13 +25,19 @@ class _HomeState extends State<Home> {
     getData();
   }
 
+
+
   getData() async {
     //Получение листа из памяти
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs = await SharedPreferences.getInstance();
     setState(() {
       thoughtsList = prefs.getStringList('thoughts_list') == null
           ? []
           : prefs.getStringList('thoughts_list');
+
+      int hour = prefs.getInt("hours") == null? TimeOfDay.now().hour:prefs.getInt("hours");
+      int minute = prefs.getInt("minute") == null? TimeOfDay.now().minute:prefs.getInt("minute");
+      notificationTime =TimeOfDay(hour: hour, minute: minute);
     });
   }
 

@@ -1,19 +1,20 @@
-import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:mind_tracker/authorization/FirebaseUserRepository.dart';
 import 'package:mind_tracker/authorization/auth_bloc.dart';
-import 'package:mind_tracker/splash/splash.dart';
 import 'authorization/authorization_window_widget.dart';
 import 'package:mind_tracker/home/home.dart';
 import 'package:flutter/services.dart';
-
+import 'package:flutter_native_timezone/flutter_native_timezone.dart';
+import 'package:timezone/data/latest.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
 
 FlutterLocalNotificationsPlugin notifications = new FlutterLocalNotificationsPlugin(); // initialise the plugin. app_icon needs to be a added as a drawable resource to the Android head project
 var initializationSettingsAndroid =
-new AndroidInitializationSettings('ic_launcher');
+new AndroidInitializationSettings('logo');
 var initializationSettingsIOS = IOSInitializationSettings();
 var initializationSettings = InitializationSettings(
     android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
@@ -23,7 +24,14 @@ void main() async{
   SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(statusBarColor: Colors.deepPurple // status bar color
           ));
+
+
+  tz.initializeTimeZones();
+  final String timeZoneName = await FlutterNativeTimezone.getLocalTimezone();
+  print(timeZoneName);
+  tz.setLocalLocation(tz.getLocation("Europe/Moscow"));
   notifications.initialize(initializationSettings);
+
   await Firebase.initializeApp();
   runApp(MyApp());
 }
@@ -58,39 +66,6 @@ class MyApp extends StatelessWidget {
         ///Home(),
       ),
     );
-    
-    return FutureBuilder(
-      // Initialize FlutterFire:
-      future: _initialization,
-      builder: (context, snapshot) {
-        // Check for errors
-        if (snapshot.hasError) {
-          //return SomethingWentWrong(); экран ошибочки
-        }
-        // Once complete, show your application
-        if (snapshot.connectionState == ConnectionState.done) {
-          return MaterialApp(
-              debugShowCheckedModeBanner: false,
-              title: 'Flutter Demo',
-              theme: ThemeData(
-                primarySwatch: Colors.deepPurple,
-                visualDensity: VisualDensity.adaptivePlatformDensity,
-              ),
-                home:SplashWidget() ,
-             ///Home(),
-          );
-        }
-        // Otherwise, show something whilst waiting for initialization to complete
-       // return Loading(); экран загрузки
-        return MaterialApp(
-          home: Scaffold(
-            body:Center(
-              child:CircularProgressIndicator()
-            ) ,
-          ),
-        );
 
-      },
-    );
   }
 }
