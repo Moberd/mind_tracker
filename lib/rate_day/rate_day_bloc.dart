@@ -43,6 +43,7 @@ class RateDayBloc extends Bloc<RateDayEvent, RateDayState> {
           ref.set({"mark":event.mark});
         }
       });
+     fr.collection("users_friends").doc(email).update({"lastmark":event.mark,"lastvisited":formatted});
     }
   }
     Stream<RateDayState> _mapDayLoadToState() async*{

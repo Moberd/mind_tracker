@@ -7,73 +7,20 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:barcode_scan_fix/barcode_scan.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:mind_tracker/Types/FriendsData.dart';
+import 'package:mind_tracker/authorization/auth_bloc.dart';
 import 'package:mind_tracker/settings_button_logic.dart';
 import 'package:mind_tracker/share/generate_qr.dart';
+import 'package:mind_tracker/share/share_bloc.dart';
 
-class FriendListWrapper extends StatefulWidget {
-  @override
-  _FriendListWrapperState createState() => _FriendListWrapperState();
-}
-
-class _FriendListWrapperState extends State<FriendListWrapper> {
-  @override
-  Widget build(BuildContext context) {
-    String email = FirebaseAuth.instance.currentUser.email;
-    return new StreamBuilder<DocumentSnapshot>(
-      stream: FirebaseFirestore.instance
-          .collection("users_friends")
-          .doc(email)
-          .snapshots(),
-      builder: (context, myDoc) {
-        if (myDoc == null)
-          return new Center(
-            child: CircularProgressIndicator(),
-          );
-        if (myDoc.data == null)
-          return new Center(
-            child: CircularProgressIndicator(),
-          );
-        if (myDoc.data.data() == null)
-          return new Center(
-            child: CircularProgressIndicator(),
-          );
-        String userName = myDoc.data.data()["name"];
-        return new FutureBuilder<QuerySnapshot>(
-          future: FirebaseFirestore.instance
-              .collection("users_friends")
-              .where("friends", arrayContainsAny: [email]).get(),
-          builder:
-              (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-            if (!snapshot.hasData) return Center(child: CircularProgressIndicator(),);
-            List<FriendsData> data = [];
-            for (DocumentSnapshot doc in snapshot.data.docs) {
-              if (doc.data()["lastmark"] == "") {
-                data.add(new FriendsData("01-01-1969", doc.data()["name"], 5));
-              } else {
-                data.add(new FriendsData(doc.data()["lastvisited"],
-                    doc.data()["name"], doc.data()["lastmark"]));
-              }
-            }
-            return FriendsList(
-              userName: userName,
-              data: data,
-            );
-          },
-        );
-      },
-    );
-  }
-}
 
 class FriendsList extends StatefulWidget {
   
   
-  final String userName;
-  final List<FriendsData> data;
 
-  const FriendsList({Key key, this.userName, this.data}) : super(key: key);
+  const FriendsList({Key key}) : super(key: key);
   @override
   _FriendsListState createState() => _FriendsListState();
 }
@@ -86,93 +33,95 @@ class _FriendsListState extends State<FriendsList> {
   final _mainFont =
       TextStyle(fontSize: 24.0, color: Color.fromRGBO(0, 0, 0, 1));
   final _dateFont = TextStyle(fontSize: 28.0, color: Colors.deepPurple);
-  
-  SplayTreeMap<DateTime, List<FriendsData>> generateMap() {
-    SplayTreeMap<DateTime, List<FriendsData>> result =
-        SplayTreeMap<DateTime, List<FriendsData>>((a, b) {
-      return a.compareTo(b) * (-1);
-    });
-    final data = widget.data;
-    for (var friend in data) {
-      List<FriendsData> t = [];
-      final date = new DateFormat("dd-MM-yyy").parse(friend.dates);
-      if (result[date] != null) {
-        t = result[date];
-        t.add(new FriendsData(friend.dates, friend.friendName, friend.mood));
-      } else {
-        t.add(new FriendsData(friend.dates, friend.friendName, friend.mood));
-      }
-      result[date] = t;
-    }
-    return result;
-  }
+
 
   Widget build(BuildContext context) {
-    if (widget.data.isEmpty)
-      return Scaffold(
-          backgroundColor: Color(0xFFFEF9FF),
-          appBar: AppBar(
-              toolbarHeight: 60,
-              backgroundColor: Colors.white,
-              title: Text('${widget.userName}', style: _titleFont),
-              actions: <Widget>[
-                IconButton(
-                  icon: Icon(Icons.camera_alt_outlined),
-                  color: Colors.black,
-                  iconSize: 40,
-                  onPressed: () => {scan()},
-                ),
-                IconButton(
-                  onPressed: () => {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => GenerateScreen()))
-                  },
-                  color: Colors.black,
-                  icon: Icon(Icons.qr_code_outlined),
-                  iconSize: 40,
-                )
-              ]),
-          body: Center(
-              child: Text(
-            "Use QR to add new friends",
-            style: _mainFont,
-          )));
-    return Scaffold(
-        backgroundColor: Color(0xFFFEF9FF),
-        appBar: AppBar(
-            toolbarHeight: 60,
-            backgroundColor: Colors.white,
-            title: Text('${widget.userName}', style: _titleFont),
-            actions: <Widget>[
-              IconButton(
-                icon: Icon(Icons.settings),
-                color: Colors.black,
-                iconSize: 40,
-                onPressed: () => {_bloc.statisticPageEventSink.add(new StartSettingsPageEvent(context: context))},
-              ),
-              IconButton(
-                icon: Icon(Icons.camera_alt_outlined),
-                color: Colors.black,
-                iconSize: 40,
-                onPressed: () => {scan()},
-              ),
-              IconButton(
-                onPressed: () => {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => GenerateScreen()))
-                },
-                color: Colors.black,
-                icon: Icon(Icons.qr_code_outlined),
-                iconSize: 40,
-              )
-            ]),
-        body: _buildList());
+    final blocEmail = BlocProvider.of<AuthBloc>(context).email;
+    return BlocProvider<ShareBloc>(
+      create: (context){
+        return ShareBloc(blocEmail)..add(ShareInit());
+      },
+      child: BlocBuilder<ShareBloc,ShareState>(
+        builder: (context,state){
+          if(state is ShareLoaded){
+            return Scaffold(
+                backgroundColor: Color(0xFFFEF9FF),
+                appBar: AppBar(
+                    toolbarHeight: 60,
+                    backgroundColor: Colors.white,
+                    title: Text(state.name, style: _titleFont),
+                    actions: <Widget>[
+                      IconButton(
+                        icon: Icon(Icons.settings),
+                        color: Colors.black,
+                        iconSize: 40,
+                        onPressed: () => {_bloc.statisticPageEventSink.add(new StartSettingsPageEvent(context: context))},
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.camera_alt_outlined),
+                        color: Colors.black,
+                        iconSize: 40,
+                        onPressed: () => {scan(context)},
+                      ),
+                      IconButton(
+                        onPressed: () => {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) => GenerateScreen()))
+                        },
+                        color: Colors.black,
+                        icon: Icon(Icons.qr_code_outlined),
+                        iconSize: 40,
+                      )
+                    ]),
+                body: _buildList(state.friends));
+          }
+          if(state is ShareLoadedNoFriends){
+            return Scaffold(
+                backgroundColor: Color(0xFFFEF9FF),
+                appBar: AppBar(
+                    toolbarHeight: 60,
+                    backgroundColor: Colors.white,
+                    title: Text(state.name, style: _titleFont),
+                    actions: <Widget>[
+                      IconButton(
+                        icon: Icon(Icons.settings),
+                        color: Colors.black,
+                        iconSize: 40,
+                        onPressed: () => {_bloc.statisticPageEventSink.add(new StartSettingsPageEvent(context: context))},
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.camera_alt_outlined),
+                        color: Colors.black,
+                        iconSize: 40,
+                        onPressed: () => {scan(context)},
+                      ),
+                      IconButton(
+                        onPressed: () => {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => GenerateScreen()))
+                        },
+                        color: Colors.black,
+                        icon: Icon(Icons.qr_code_outlined),
+                        iconSize: 40,
+                      )
+                    ]),
+                body: Center(
+                    child: Text(
+                      "Use QR to add new friends",
+                      style: _mainFont,
+                    )));
+          }
+          return Center(child: CircularProgressIndicator(),);
+        },
+      ),
+
+    );
+
   }
 
-  Widget _buildList() {
-    var map = generateMap();
+  Widget _buildList(SplayTreeMap<DateTime, List<FriendsData>> map) {
     return ListView.builder(
         itemCount: map.length,
         itemBuilder: (context, i) {
@@ -252,10 +201,10 @@ class _FriendsListState extends State<FriendsList> {
     );
   }
 
-  Future scan() async {
+  Future scan(BuildContext context) async {
     try {
       var result = await BarcodeScanner.scan();
-      setState(() => {addFriend(result)});
+      BlocProvider.of<ShareBloc>(context).add(ShareAddFriend(result));
     } on PlatformException catch (e) {
       if (e.code == BarcodeScanner.CameraAccessDenied) {
         setState(() => {});
@@ -269,16 +218,4 @@ class _FriendsListState extends State<FriendsList> {
     }
   }
 
-  void addFriend(String name) async {
-    final mEmail = FirebaseAuth.instance.currentUser.email;
-    if(name != mEmail) {
-      FirebaseFirestore.instance.collection("users_friends").doc(mEmail).update(
-          {
-            "friends": FieldValue.arrayUnion([name])
-          });
-      FirebaseFirestore.instance.collection("users_friends").doc(name).update({
-        "friends": FieldValue.arrayUnion([mEmail])
-      });
-    }
-  }
 }

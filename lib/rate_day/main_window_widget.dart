@@ -129,16 +129,6 @@ class _ThoughtsListState extends State<ThoughtsList> {
                   return Dismissible(
                     key: Key(thoughts[i]),
                     onDismissed: (direction) {
-                    //  setState(() {
-                    //    //thoughtsList.removeAt(i);
-                    //    //String email = FirebaseAuth.instance.currentUser.email;
-                    //    //final DateTime now = DateTime.now();
-                    //    //final DateFormat formatter = DateFormat('dd-MM-yyyy');
-                    //    //final String formatted = formatter.format(now);
-                    //    //final ref = FirebaseFirestore.instance.collection("users").doc(email).collection("days"). doc(formatted);
-                    //    //ref.update({"thoughts":thoughtsList});
-
-                    //  });
                      BlocProvider.of<RateDayBloc>(context).add(RateDayDelete(i,thoughts ));
                      ScaffoldMessenger
                         .of(context)
@@ -258,7 +248,6 @@ class _SliderContainerState extends State<SliderContainer> with WidgetsBindingOb
       if(state is RateDayLoaded){
         double mark = double.parse(state.mark);
         saveMark = state.mark;
-        //print(mark);
         return Column(children: [
           Slider(
             divisions: 10,
@@ -281,23 +270,6 @@ class _SliderContainerState extends State<SliderContainer> with WidgetsBindingOb
       return Center( child: CircularProgressIndicator(),);
 
     });
-    return Column(children: [
-      Slider(
-        divisions: 10,
-        activeColor: Colors.deepPurple,
-        inactiveColor: Colors.deepPurple[50],
-        min: _lowerValue,
-        max: _upperValue,
-        value: double.parse(widget.mark),
-        onChanged: (val) {
-          BlocProvider.of<RateDayBloc>(context).add(RateDaySetMark(val.truncate()));
-        },
-      ),
-      Padding(
-        padding: const EdgeInsets.only(bottom: 8.0),
-        child:RateDigitText(mark: widget.mark,),
-      ),
-    ],);
   }
 }
 

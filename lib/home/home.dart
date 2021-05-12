@@ -16,13 +16,13 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  final _bloc = HomeBloc();
   int _currentIndex = 1;
 
 
   @override
   void initState() {
     super.initState();
+    getData();
   }
 
 
@@ -40,7 +40,7 @@ class _HomeState extends State<Home> {
   final List<Widget> _children = [
     CalendarWindowWidgetWrapper(),
     MainWindowWidget(),
-    FriendListWrapper(),
+    FriendsList(),
   ];
 
   @override

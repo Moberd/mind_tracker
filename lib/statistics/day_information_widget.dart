@@ -85,7 +85,6 @@ class DayInformationWidgetState extends State<DayInformationWidget> {
                   height: 40,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(7),
-                    border: Border.all(color: Colors.black, width: 1),
                   ),
                   alignment: Alignment.center,
                 )
