@@ -30,11 +30,14 @@ class _HomeState extends State<Home> {
   getData() async {
     //Получение листа из памяти
     prefs = await SharedPreferences.getInstance();
+    bool isFirstLaunch =prefs.getInt("hours") == null ||prefs.getInt("minute") == null;
     int hour = prefs.getInt("hours") == null? TimeOfDay.now().hour:prefs.getInt("hours");
     int minute = prefs.getInt("minute") == null? TimeOfDay.now().minute:prefs.getInt("minute");
     notificationTime =TimeOfDay(hour: hour, minute: minute);
-    SettingsLogic settingsLogic = new SettingsLogic();
-    settingsLogic.firstLaunch.add(new FirstTimeInitialization());
+    if(isFirstLaunch) {
+      SettingsLogic settingsLogic = new SettingsLogic();
+      settingsLogic.firstLaunch.add(new FirstTimeInitialization());
+    }
   }
 
   final List<Widget> _children = [

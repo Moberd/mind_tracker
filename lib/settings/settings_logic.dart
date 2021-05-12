@@ -61,7 +61,6 @@ class SettingsLogic {
     _enabledEventController.stream.listen(_changeState);
     _timeChangeEventController.stream.listen(_getNewTime);
     _timeOfDay = notificationTime;
-    print(_timeOfDay.toString());
     _inTimeOfDay.add(_timeOfDay);
     _firstLaunchEventController.stream.listen(_init);
   }
