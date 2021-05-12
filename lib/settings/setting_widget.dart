@@ -61,13 +61,15 @@ class SettingsWidgetState extends State<SettingWidget> {
                     height: 40,
                     child: StreamBuilder(
                         stream: _bloc.timeOfDay,
+                        initialData: TimeOfDay.now(),
                         builder: (BuildContext context,
                             AsyncSnapshot<TimeOfDay> snapshot) {
+                          var time = snapshot.data;
                           return MaterialButton(
                             onPressed: () {
                               _bloc.updateTime.add(new TryUpdateTime(context: context));
                             },
-                            child: Text(snapshot.data.hour.toString() + ":"+snapshot.data.minute.toString()),
+                            child: Text(time.hour.toString() + ":"+time.minute.toString()),
                             color: Colors.transparent,
                           );
                         }))

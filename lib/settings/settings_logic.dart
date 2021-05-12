@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:timezone/timezone.dart' as tz;
 import 'package:mind_tracker/home/home.dart';
+import 'package:timezone/timezone.dart' as tz;
 
 import '../main.dart';
 
@@ -15,12 +15,15 @@ class TryUpdateTime {
   TryUpdateTime({this.context});
 }
 
-class FirstTimeInitialization{}
+class FirstTimeInitialization {
+
+  FirstTimeInitialization();
+}
 
 TimeOfDay notificationTime;
 
 class SettingsLogic {
-  TimeOfDay _timeOfDay = notificationTime;
+  TimeOfDay _timeOfDay;
   bool _isEnabled;
   final StreamController<TimeOfDay> _timeStateController =
       StreamController<TimeOfDay>();
@@ -43,18 +46,25 @@ class SettingsLogic {
 
   Sink<ChangeStateEnabled> get enabledEventSink => _enabledEventController.sink;
 
-  final _firstLaunchEventController = StreamController<FirstTimeInitialization>();
-  Sink<FirstTimeInitialization> get firstLaunch => _firstLaunchEventController.sink;
+  final _firstLaunchEventController =
+      StreamController<FirstTimeInitialization>();
+
+  Sink<FirstTimeInitialization> get firstLaunch =>
+      _firstLaunchEventController.sink;
 
   SettingsLogic() {
-    _isEnabled=prefs.getBool("isNotificationEnabled") == null ? true : prefs.getBool("isNotificationEnabled");
+    print(notificationTime);
+    _isEnabled = prefs.getBool("isNotificationEnabled") == null
+        ? true
+        : prefs.getBool("isNotificationEnabled");
     _inEnabled.add(_isEnabled);
     _enabledEventController.stream.listen(_changeState);
     _timeChangeEventController.stream.listen(_getNewTime);
+    _timeOfDay = notificationTime;
+    print(_timeOfDay.toString());
     _inTimeOfDay.add(_timeOfDay);
     _firstLaunchEventController.stream.listen(_init);
   }
-
 
   void _changeState(ChangeStateEnabled event) {
     _isEnabled = !_isEnabled;
@@ -111,16 +121,16 @@ class SettingsLogic {
 
   tz.TZDateTime _nextInstance(TimeOfDay time) {
     final tz.TZDateTime now = tz.TZDateTime.now(tz.local);
-    tz.TZDateTime scheduledDate =
-        tz.TZDateTime(tz.local, now.year, now.month, now.day, time.hour,time.minute);
+    tz.TZDateTime scheduledDate = tz.TZDateTime(
+        tz.local, now.year, now.month, now.day, time.hour, time.minute);
     if (scheduledDate.isBefore(now)) {
       scheduledDate = scheduledDate.add(const Duration(days: 1));
     }
     return scheduledDate;
   }
 
-  void _init(FirstTimeInitialization event){
-    var time =TimeOfDay.now();
+  void _init(FirstTimeInitialization event) {
+    var time = notificationTime;
     _enableNotifications(time);
     prefs.setInt("hours", time.hour);
     prefs.setInt("minute", time.minute);
