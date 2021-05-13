@@ -55,7 +55,7 @@ class RateDayBloc extends Bloc<RateDayEvent, RateDayState> {
         yield RateDayLoaded([],"5");
       }
       final thoughtList =  new List<String>.from(doc.data()["thoughts"]??[]);
-      final mark =  (doc.data()["mark"]??5).toString();
+      final mark =  (doc.data()["mark"]??500).toString();
       yield RateDayLoaded(thoughtList,mark);
   }
 

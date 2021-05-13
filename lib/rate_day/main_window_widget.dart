@@ -207,32 +207,6 @@ class SliderContainer extends StatefulWidget {
 class _SliderContainerState extends State<SliderContainer> with WidgetsBindingObserver {
   static double _lowerValue = 0;
   static double _upperValue = 1000;
-   String saveMark;
-   RateDayBloc _rateDayBloc;
-  @override
-  void initState() {
-    WidgetsBinding.instance.addObserver(this);
-    _rateDayBloc = BlocProvider.of<RateDayBloc>(context);
-    super.initState();
-  }
-  @override
-  void deactivate() {
-    _rateDayBloc.add(RateDatSaveLastMark(int.parse(saveMark)));
-    super.deactivate();
-  }
-  @override
-  void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
-    _rateDayBloc.add(RateDatSaveLastMark(int.parse(saveMark)));
-    super.dispose();
-  }
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    if(state.toString() == "AppLifecycleState.inactive"){
-      _rateDayBloc.add(RateDatSaveLastMark(int.parse(saveMark)));
-    }
-    super.didChangeAppLifecycleState(state);
-  }
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<RateDayBloc,RateDayState>(
@@ -247,7 +221,6 @@ class _SliderContainerState extends State<SliderContainer> with WidgetsBindingOb
 
       if(state is RateDayLoaded){
         double mark = double.parse(state.mark);
-        saveMark = state.mark;
         return Column(children: [
           Slider(
             activeColor: Colors.deepPurple,
@@ -257,6 +230,9 @@ class _SliderContainerState extends State<SliderContainer> with WidgetsBindingOb
             value: mark,
             onChanged: (val) {
               BlocProvider.of<RateDayBloc>(context).add(RateDaySetMark(val.truncate()));
+            },
+            onChangeEnd: (val){
+              BlocProvider.of<RateDayBloc>(context).add(RateDatSaveLastMark(val.truncate()));
             },
           ),
           Padding(

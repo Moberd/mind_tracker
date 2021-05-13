@@ -45,13 +45,7 @@ class CalendarBloc {
         Map<DateTime,BaseData> thoughts = {};
         for(DocumentSnapshot doc in snapshot.data.docs){
           final ddMMyyyy= doc.id.split("-");
-          int mark;
-          try{
-            mark = doc.data()["mark"];
-          }catch(e){
-            mark = 0;
-          }
-
+          final int mark =  (doc.data()["mark"]??-1);
           List<String> thoughtsLst;
           try {
             thoughtsLst = new List<String>.from(

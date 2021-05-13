@@ -87,7 +87,9 @@ class CalendarPageBloc {
     List<TimeSeriesSales> res = [];
     map.keys.forEach((element) {
       if (element.year == day.year && element.month == day.month)
-        res.add(new TimeSeriesSales(element, map[element].mark));
+        if (map[element].mark >=0) {
+          res.add(new TimeSeriesSales(element, map[element].mark));
+        }
     });
     print(res.length);
     if (res.length == 0) {

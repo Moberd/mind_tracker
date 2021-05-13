@@ -55,9 +55,11 @@ class MyApp extends StatelessWidget {
         home: BlocListener<AuthBloc,AuthState>(
           listener: (context,state){
             if(state is AuthAuthenticated){
+              print(state);
               Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
             }
             if(state is AuthUnauthenticated){
+              print(state);
               Navigator.push(context, MaterialPageRoute(builder: (context) => AuthorizationWindowWidget()));
             }
           },

@@ -154,7 +154,7 @@ class _FriendsListState extends State<FriendsList> {
 
   Widget buildFriendTile(FriendsData friend) {
     Icon i;
-    switch (friend.mood) {
+    switch ((friend.mood/100).truncate()) {
       case 0:
         i = Icon(Icons.thumb_down, color: Colors.deepPurple);
         break;

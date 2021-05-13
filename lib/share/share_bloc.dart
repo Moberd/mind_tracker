@@ -70,7 +70,7 @@ class ShareBloc extends Bloc<ShareEvent, ShareState> {
       List<FriendsData> data = [];
       for(DocumentSnapshot  doc in snapshot.docs){
         if (doc.data()["lastmark"] == "") {
-          data.add(new FriendsData("01-01-1969", doc.data()["name"], 5));
+          data.add(new FriendsData("01-01-1969", doc.data()["name"], 500));
         } else {
           data.add(new FriendsData(doc.data()["lastvisited"],
               doc.data()["name"], doc.data()["lastmark"]));
