@@ -63,6 +63,7 @@ class RateDayBloc extends Bloc<RateDayEvent, RateDayState> {
     List<String> thoughts = event.thoughts;
     thoughts.add(event.thought);
     final DateTime now = DateTime.now();
+    print(now);
     final DateFormat formatter = DateFormat('dd-MM-yyyy');
     final String formatted = formatter.format(now);
     final ref = fr.collection("users").doc(email).collection("days").doc(formatted);

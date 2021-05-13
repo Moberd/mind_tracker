@@ -206,7 +206,7 @@ class SliderContainer extends StatefulWidget {
 
 class _SliderContainerState extends State<SliderContainer> with WidgetsBindingObserver {
   static double _lowerValue = 0;
-  static double _upperValue = 10;
+  static double _upperValue = 1000;
    String saveMark;
    RateDayBloc _rateDayBloc;
   @override
@@ -250,14 +250,12 @@ class _SliderContainerState extends State<SliderContainer> with WidgetsBindingOb
         saveMark = state.mark;
         return Column(children: [
           Slider(
-            divisions: 10,
             activeColor: Colors.deepPurple,
             inactiveColor: Colors.deepPurple[50],
             min: _lowerValue,
             max: _upperValue,
             value: mark,
             onChanged: (val) {
-              print(val);
               BlocProvider.of<RateDayBloc>(context).add(RateDaySetMark(val.truncate()));
             },
           ),
@@ -281,7 +279,7 @@ class RateDigitText extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       child:Text(
-        mark,
+        (double.parse(mark)/100).truncate().toString(),
         style: TextStyle(fontSize: 30),
       ),
       width: 40,
