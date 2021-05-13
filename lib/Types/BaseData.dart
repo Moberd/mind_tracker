@@ -8,6 +8,6 @@ class BaseData{
   {
     this.date = new DateTime(dateTime.year,dateTime.month,dateTime.day);
     this.thoughts=list;
-    this.mark=m;
+    this.mark=(m/100.0).round();
   }
 }
