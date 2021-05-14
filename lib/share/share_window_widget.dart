@@ -166,37 +166,37 @@ class _FriendsListState extends State<FriendsList> {
     Icon i;
     switch ((friend.mood/100).truncate()) {
       case 0:
-        i = Icon(Icons.thumb_down, color: Colors.deepPurple);
+        i = Icon(Icons.mood_bad_outlined, color: Colors.deepPurple);
         break;
       case 1:
-        i = Icon(Icons.thumb_down, color: Colors.deepPurple);
+        i = Icon(Icons.filter_1_outlined, color: Colors.deepPurple);
         break;
       case 2:
-        i = Icon(Icons.thumb_down, color: Colors.deepPurple);
+        i = Icon(Icons.filter_2_outlined, color: Colors.deepPurple);
         break;
       case 3:
-        i = Icon(Icons.thumb_down, color: Colors.deepPurple);
+        i = Icon(Icons.filter_3_outlined, color: Colors.deepPurple);
         break;
       case 4:
-        i = Icon(Icons.check, color: Colors.deepPurple);
+        i = Icon(Icons.filter_4_outlined, color: Colors.deepPurple);
         break;
       case 5:
-        i = Icon(Icons.check, color: Colors.deepPurple);
+        i = Icon(Icons.filter_5_outlined, color: Colors.deepPurple);
         break;
       case 6:
-        i = Icon(Icons.check, color: Colors.deepPurple);
+        i = Icon(Icons.filter_6_outlined, color: Colors.deepPurple);
         break;
       case 7:
-        i = Icon(Icons.check, color: Colors.deepPurple);
+        i = Icon(Icons.filter_7_outlined, color: Colors.deepPurple);
         break;
       case 8:
-        i = Icon(Icons.thumb_up, color: Colors.deepPurple);
+        i = Icon(Icons.filter_8_outlined, color: Colors.deepPurple);
         break;
       case 9:
-        i = Icon(Icons.thumb_up, color: Colors.deepPurple);
+        i = Icon(Icons.filter_9_outlined, color: Colors.deepPurple);
         break;
       case 10:
-        i = Icon(Icons.thumb_up, color: Colors.deepPurple);
+        i = Icon(Icons.mood_outlined, color: Colors.deepPurple);
         break;
       default:
     }

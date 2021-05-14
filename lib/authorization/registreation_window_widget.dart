@@ -46,7 +46,6 @@ class RegistrationWindowWidgetState extends State<RegistrationWindowWidget> {
               reverse: true,
               child: Column(
                 children: [
-                  //TODO добавьте сюда лого приложения
                   Image.asset(
                     'assets/logo.png',
                     height: 256,

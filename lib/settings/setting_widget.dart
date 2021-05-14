@@ -1,5 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mind_tracker/authorization/authorization_window_widget.dart';
 import 'package:mind_tracker/settings/settings_logic.dart';
 
 class SettingWidget extends StatefulWidget {
@@ -17,12 +19,13 @@ class SettingsWidgetState extends State<SettingWidget> {
     return Scaffold(
       backgroundColor: Color(0xFFFEF9FF),
       appBar: AppBar(
-        title: Text("Notifications settings"),
+        title: Text("Settings"),
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Spacer(),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -74,7 +77,16 @@ class SettingsWidgetState extends State<SettingWidget> {
                           );
                         }))
               ],
-            )
+            ),
+            Spacer(),
+            MaterialButton(
+              onPressed: () {
+                FirebaseAuth.instance.signOut();
+                Navigator.pushAndRemoveUntil(context,MaterialPageRoute(builder: (context) => AuthorizationWindowWidget()),(Route<dynamic> route) => false,);
+              },
+              child: Text("Exit account"),
+              color: Colors.redAccent,
+            ),
           ],
         ),
       ),
