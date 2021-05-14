@@ -14,7 +14,7 @@ import 'package:mind_tracker/authorization/auth_bloc.dart';
 import 'package:mind_tracker/settings_button_logic.dart';
 import 'package:mind_tracker/share/generate_qr.dart';
 import 'package:mind_tracker/share/share_bloc.dart';
-
+import 'package:mind_tracker/share/add_friends.dat';
 
 class FriendsList extends StatefulWidget {
   
@@ -71,7 +71,7 @@ class _FriendsListState extends State<FriendsList> {
                         color: Colors.black,
                         icon: Icon(Icons.qr_code_outlined),
                         iconSize: 40,
-                      )
+                      ),
                     ]),
                 body: _buildList(state.friends));
           }
@@ -105,7 +105,16 @@ class _FriendsListState extends State<FriendsList> {
                         color: Colors.black,
                         icon: Icon(Icons.qr_code_outlined),
                         iconSize: 40,
-                      )
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.account_box),
+                        color: Colors.black,
+                        iconSize: 40,
+                        onPressed: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => RequestScreen())),
+                      ),
                     ]),
                 body: Center(
                     child: Text(
@@ -120,6 +129,7 @@ class _FriendsListState extends State<FriendsList> {
     );
 
   }
+
 
   Widget _buildList(SplayTreeMap<DateTime, List<FriendsData>> map) {
     return ListView.builder(
@@ -219,3 +229,4 @@ class _FriendsListState extends State<FriendsList> {
   }
 
 }
+
