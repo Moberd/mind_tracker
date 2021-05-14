@@ -11,6 +11,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
+import 'package:flutter/foundation.dart' show kIsWeb;
+
 
 FlutterLocalNotificationsPlugin notifications = new FlutterLocalNotificationsPlugin(); // initialise the plugin. app_icon needs to be a added as a drawable resource to the Android head project
 var initializationSettingsAndroid =
@@ -25,13 +27,13 @@ void main() async{
       SystemUiOverlayStyle(statusBarColor: Colors.deepPurple // status bar color
           ));
 
-
-  tz.initializeTimeZones();
-  final String timeZoneName = await FlutterNativeTimezone.getLocalTimezone();
-  print(timeZoneName);
-  tz.setLocalLocation(tz.getLocation("Europe/Moscow"));
-  notifications.initialize(initializationSettings);
-
+  if(!kIsWeb) {
+    tz.initializeTimeZones();
+    final String timeZoneName = await FlutterNativeTimezone.getLocalTimezone();
+    print(timeZoneName);
+    tz.setLocalLocation(tz.getLocation("Europe/Moscow"));
+    notifications.initialize(initializationSettings);
+  }
   await Firebase.initializeApp();
   runApp(MyApp());
 }
