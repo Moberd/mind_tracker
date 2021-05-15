@@ -60,21 +60,6 @@ class _FriendsListState extends State<FriendsList> {
                         onPressed: () => {_bloc.statisticPageEventSink.add(new StartSettingsPageEvent(context: context))},
                       ),
                       IconButton(
-                        icon: Icon(Icons.camera_alt_outlined),
-                        color: Colors.black,
-                        iconSize: 40,
-                        onPressed: () => {scan(context)},
-                      ),
-                      IconButton(
-                        onPressed: () => {
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) => GenerateScreen()))
-                        },
-                        color: Colors.black,
-                        icon: Icon(Icons.qr_code_outlined),
-                        iconSize: 40,
-                      ),
-                      IconButton(
                         icon: Icon(Icons.person_search),
                         color: Colors.black,
                         iconSize: 40,
@@ -102,30 +87,13 @@ class _FriendsListState extends State<FriendsList> {
                         onPressed: () => {_bloc.statisticPageEventSink.add(new StartSettingsPageEvent(context: context))},
                       ),
                       IconButton(
-                        icon: Icon(Icons.camera_alt_outlined),
-                        color: Colors.black,
-                        iconSize: 40,
-                        onPressed: () => {scan(context)},
-                      ),
-                      IconButton(
-                        onPressed: () => {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => GenerateScreen()))
-                        },
-                        color: Colors.black,
-                        icon: Icon(Icons.qr_code_outlined),
-                        iconSize: 40,
-                      ),
-                      IconButton(
                         icon: Icon(Icons.account_box),
                         color: Colors.black,
                         iconSize: 40,
                         onPressed: () => Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => RequestScreen())),
+                                builder: (context) => FriendListWindow())),
                       ),
                     ]),
                 body: Center(

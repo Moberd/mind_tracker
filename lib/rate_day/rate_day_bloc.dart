@@ -52,11 +52,13 @@ class RateDayBloc extends Bloc<RateDayEvent, RateDayState> {
       final String formatted = formatter.format(now);
       final doc  = await fr.collection("users").doc(email).collection("days").doc(formatted).get();
       if(doc.data() == null){
-        yield RateDayLoaded([],"5");
+        yield RateDayLoaded(new List<String>.from([]),"5");
       }
-      final thoughtList =  new List<String>.from(doc.data()["thoughts"]??[]);
-      final mark =  (doc.data()["mark"]??500).toString();
-      yield RateDayLoaded(thoughtList,mark);
+      else {
+        final thoughtList = new List<String>.from(doc.data()["thoughts"] ?? []);
+        final mark = (doc.data()["mark"] ?? 500).toString();
+        yield RateDayLoaded(thoughtList, mark);
+      }
   }
 
   Stream<RateDayState> _mapAddToState(RateDayAdd event) async* {
