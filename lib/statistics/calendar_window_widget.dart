@@ -90,9 +90,9 @@ class CalendarWindowWidgetState extends State<CalendarWindowWidget> {
                               currentDate: DateTime.now(),
                               initialCalendarMode: DatePickerMode.day,
                               onDisplayedMonthChanged: (value) => {
-                                context.read<CalendarBloc>().add(
-                                    DayStatisticEvent(
-                                        context: context, dateTime: value))
+                                context
+                                    .read<CalendarBloc>()
+                                    .add(UpdateChartsEvent(val: value))
                               },
                             )),
                         Expanded(
@@ -110,5 +110,4 @@ class CalendarWindowWidgetState extends State<CalendarWindowWidget> {
               ),
             )));
   }
-
 }
