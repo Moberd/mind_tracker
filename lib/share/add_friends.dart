@@ -7,7 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:mind_tracker/Types/FriendsData.dart';
-import 'package:mind_tracker/settings_button_logic.dart';
+import 'package:mind_tracker/settings/settings_button_logic.dart';
 import 'package:mind_tracker/share/share_bloc.dart';
 
 
