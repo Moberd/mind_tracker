@@ -257,7 +257,7 @@ class RateDigitText extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       child:Text(
-        (double.parse(mark)/100).truncate().toString(),
+        (double.parse(mark)/100).round().toString(),
         style: TextStyle(fontSize: 30),
       ),
       width: 40,
