@@ -33,7 +33,7 @@ class _FriendsListState extends State<FriendsList> {
       TextStyle(fontSize: 30.0, color: Color.fromRGBO(0, 0, 0, 1));
   final _mainFont =
       TextStyle(fontSize: 24.0, color: Color.fromRGBO(0, 0, 0, 1));
-  final _dateFont = TextStyle(fontSize: 28.0, color: Colors.deepPurple);
+  final _dateFont = TextStyle(fontSize: 24.0, color: Colors.deepPurple);
 
 
   Widget build(BuildContext context) {
