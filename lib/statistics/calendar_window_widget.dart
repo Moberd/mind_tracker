@@ -111,5 +111,4 @@ class CalendarWindowWidgetState extends State<CalendarWindowWidget> {
             )));
   }
 
-  void onDateChanged(DateTime value) {}
 }
