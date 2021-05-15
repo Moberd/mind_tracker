@@ -12,9 +12,10 @@ import 'package:intl/intl.dart';
 import 'package:mind_tracker/Types/FriendsData.dart';
 import 'package:mind_tracker/authorization/auth_bloc.dart';
 import 'package:mind_tracker/settings_button_logic.dart';
+import 'package:mind_tracker/share/friendlist/friend_list_widget.dart';
 import 'package:mind_tracker/share/generate_qr.dart';
 import 'package:mind_tracker/share/share_bloc.dart';
-import 'package:mind_tracker/share/add_friends.dat';
+import 'package:mind_tracker/share/add_friends.dart';
 
 class FriendsList extends StatefulWidget {
   
@@ -47,6 +48,7 @@ class _FriendsListState extends State<FriendsList> {
             return Scaffold(
                 backgroundColor: Color(0xFFFEF9FF),
                 appBar: AppBar(
+                    automaticallyImplyLeading: false,
                     toolbarHeight: 60,
                     backgroundColor: Colors.white,
                     title: Text(state.name, style: _titleFont),
@@ -72,6 +74,15 @@ class _FriendsListState extends State<FriendsList> {
                         icon: Icon(Icons.qr_code_outlined),
                         iconSize: 40,
                       ),
+                      IconButton(
+                        icon: Icon(Icons.person_search),
+                        color: Colors.black,
+                        iconSize: 40,
+                        onPressed: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => FriendListWindow())),
+                      ),
                     ]),
                 body: _buildList(state.friends));
           }
@@ -79,6 +90,7 @@ class _FriendsListState extends State<FriendsList> {
             return Scaffold(
                 backgroundColor: Color(0xFFFEF9FF),
                 appBar: AppBar(
+                    automaticallyImplyLeading: false,
                     toolbarHeight: 60,
                     backgroundColor: Colors.white,
                     title: Text(state.name, style: _titleFont),

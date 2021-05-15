@@ -75,8 +75,6 @@ class RateDayBloc extends Bloc<RateDayEvent, RateDayState> {
         ref.set({"thoughts":thoughts});
       }
     });
-
-    yield RateDayTrashState();
     yield RateDayLoaded(thoughts,(state as RateDayLoaded).mark);
   }
 
@@ -95,12 +93,11 @@ class RateDayBloc extends Bloc<RateDayEvent, RateDayState> {
         ref.set({"thoughts":thoughts});
       }
     });
-    yield RateDayTrashState();
+
     yield RateDayLoaded(thoughts,(state as RateDayLoaded).mark);
   }
 
   Stream<RateDayState> _mapSetMarkToState(RateDaySetMark event)async*{
-    yield RateDayTrashState();
     yield RateDayLoaded((state as RateDayLoaded).thoughts,event.mark.toString());
   }
 }

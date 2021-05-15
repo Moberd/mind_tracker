@@ -72,8 +72,9 @@ class ShareBloc extends Bloc<ShareEvent, ShareState> {
         if (doc.data()["lastmark"] == "") {
           data.add(new FriendsData("01-01-1969", doc.data()["name"], 500));
         } else {
+          print(doc.data());
           data.add(new FriendsData(doc.data()["lastvisited"],
-              doc.data()["name"], doc.data()["lastmark"]));
+              doc.data()["name"], doc.data()["lastmark"]) );
         }
       }
       return data;

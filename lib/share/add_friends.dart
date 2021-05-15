@@ -14,7 +14,7 @@ import 'package:mind_tracker/share/share_bloc.dart';
 
 class RequestScreen extends StatelessWidget {
 
-  List<String> friends = ["Friend1", "Friend2", "Friend3"];
+  final List<String> friends = ["Friend1", "Friend2", "Friend3"];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,6 +22,7 @@ class RequestScreen extends StatelessWidget {
         title: Text("Add Friends"),
       ),
       body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           TextField(),
           ListView.builder(
