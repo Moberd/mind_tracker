@@ -73,9 +73,16 @@ class MyApp extends StatelessWidget {
 
   }
 }
-int lang = 1;
+int lang = 0;
 class Strings {
-  static const List<String> howAreYouToday = ["How are you today?", "Как вы себя чувствуете?"];
+  void changeLang(){
+    if(lang == 0){
+      lang = 1;
+    } else if(lang == 1){
+      lang = 0;
+    }
+  }
+  static const List<String> howAreYouToday = ["How are you today?", "Как дела?"];
   static const List<String> yourThoughtsToday = ["Your thoughts today", "Ваши мысли сегодня"];
   static const List<String> calendar = ["Calendar", "Календарь"];
   static const List<String> home = ["Home", "Домашний экран"];
@@ -98,7 +105,10 @@ class Strings {
   static const List<String> login = ["Login","Войти"];
   static const List<String> register = ["Register","Регистрация"];
   static const List<String> yourName = ["Your name","Ваше имя"];
-  static const List<String> lastVisit = ["Last visit on ","Последнее посещение: "];
+  static const List<String> lastVisit = ["Last visit on ","Последняя запись: "];
+  static const List<String> rus_lang = ["RU","Рус"];
+  static const List<String> eng_lang = ["EN","Англ"];
 }
+
 
 

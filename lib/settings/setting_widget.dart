@@ -71,19 +71,51 @@ class SettingsWidgetState extends State<SettingWidget> {
                           var time = snapshot.data;
                           return MaterialButton(
                             onPressed: () {
-                              _bloc.updateTime.add(new TryUpdateTime(context: context));
+                              _bloc.updateTime
+                                  .add(new TryUpdateTime(context: context));
                             },
-                            child: Text(time.hour.toString() + ":"+time.minute.toString()),
+                            child: Text(time.hour.toString() +
+                                ":" +
+                                time.minute.toString()),
                             color: Colors.transparent,
                           );
                         }))
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  Strings.eng_lang[lang],
+                  style: TextStyle(
+                    fontSize: 18,
+                  ),
+                ),
+                Switch(
+                    value: lang == 1,
+                    onChanged: (value) => {
+                          setState(() {
+                            lang = value ? 1 : 0;
+                          })
+                        }),
+                Text(
+                  Strings.rus_lang[lang],
+                  style: TextStyle(
+                    fontSize: 18,
+                  ),
+                ),
               ],
             ),
             Spacer(),
             MaterialButton(
               onPressed: () {
                 FirebaseAuth.instance.signOut();
-                Navigator.pushAndRemoveUntil(context,MaterialPageRoute(builder: (context) => AuthorizationWindowWidget()),(Route<dynamic> route) => false,);
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => AuthorizationWindowWidget()),
+                  (Route<dynamic> route) => false,
+                );
               },
               child: Text(Strings.exitAccount[lang]),
               color: Colors.redAccent,
