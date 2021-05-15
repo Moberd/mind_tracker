@@ -7,7 +7,7 @@ import 'package:mind_tracker/authorization/registreation_window_widget.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:mind_tracker/home/home.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:mind_tracker/main.dart';
 
 class AuthorizationWindowWidget extends StatefulWidget {
   @override
@@ -69,7 +69,7 @@ class AuthorizationWindowWidgetState extends State<AuthorizationWindowWidget> {
                           controller: passwordController,
                           obscureText: _passwordVisible,
                           decoration: new InputDecoration(
-                            labelText: "Password",
+                            labelText: Strings.password[lang],
 
                             //кнопка показа пароля
                             suffixIcon: IconButton(
@@ -92,7 +92,7 @@ class AuthorizationWindowWidgetState extends State<AuthorizationWindowWidget> {
                           child: Align(
                             alignment: Alignment.centerRight,
                             child: Text(
-                              "Forgot password",
+                              Strings.forgotPassword[lang],
                             ),
                           ),
                           onPressed: onForgotPassword,
@@ -118,11 +118,11 @@ class AuthorizationWindowWidgetState extends State<AuthorizationWindowWidget> {
                                   onPressed: () => onLogin(context),
                                   color: Color.fromARGB(255, 159, 159, 237),
                                   minWidth: 200.0,
-                                  child: Text("Login"),
+                                  child: Text(Strings.login[lang]),
                                 ),
                                 //Кнопка регистрации
                                 FlatButton(
-                                  child: Text("Register"),
+                                  child: Text(Strings.register[lang]),
                                   onPressed: () => onRegister(context),
                                   textColor: Colors.grey,
                                   shape: RoundedRectangleBorder(

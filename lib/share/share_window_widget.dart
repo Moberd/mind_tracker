@@ -16,7 +16,7 @@ import 'package:mind_tracker/share/friendlist/friend_list_widget.dart';
 import 'package:mind_tracker/share/generate_qr.dart';
 import 'package:mind_tracker/share/share_bloc.dart';
 import 'package:mind_tracker/share/add_friends.dart';
-
+import 'package:mind_tracker/main.dart';
 class FriendsList extends StatefulWidget {
   
   
@@ -98,8 +98,9 @@ class _FriendsListState extends State<FriendsList> {
                     ]),
                 body: Center(
                     child: Text(
-                      "Use QR to add new friends",
+                      Strings.useQRToAddNewFriends[lang],
                       style: _mainFont,
+                      textAlign: TextAlign.center,
                     )));
           }
           return Center(child: CircularProgressIndicator(),);
@@ -124,7 +125,7 @@ class _FriendsListState extends State<FriendsList> {
             child: ListTile(
                 title: ListTile(
                     title: Text(
-                        'Last visit on $formatted',
+                        Strings.lastVisit[lang]+formatted,
                         style: _dateFont)),
                 subtitle: _buildRows(map[map.keys.elementAt(i)])),
           );

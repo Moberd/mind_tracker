@@ -6,7 +6,7 @@ import '../rate_day/main_window_widget.dart';
 import '../share/share_window_widget.dart';
 import '../statistics/calendar_window_widget.dart';
 import 'logic.dart';
-
+import 'package:mind_tracker/main.dart';
 SharedPreferences prefs;
 class Home extends StatefulWidget {
   @override
@@ -58,15 +58,15 @@ class _HomeState extends State<Home> {
             items: [
               ///Календарь со статистикой
               BottomNavigationBarItem(
-                  icon: new Icon(Icons.calendar_today), label: 'Calendar'),
+                  icon: new Icon(Icons.calendar_today), label: Strings.calendar[lang]),
 
               ///Главный экран с вводом информации
               BottomNavigationBarItem(
-                  icon: new Icon(Icons.home), label: 'Home'),
+                  icon: new Icon(Icons.home), label: Strings.home[lang]),
 
               /// социальная часть
               BottomNavigationBarItem(
-                  icon: new Icon(Icons.account_box), label: 'Share')
+                  icon: new Icon(Icons.account_box), label: Strings.friends[lang])
             ],
           ),
         ),

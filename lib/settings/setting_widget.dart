@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mind_tracker/authorization/authorization_window_widget.dart';
 import 'package:mind_tracker/settings/settings_logic.dart';
+import 'package:mind_tracker/main.dart';
 
 class SettingWidget extends StatefulWidget {
   @override
@@ -19,7 +20,7 @@ class SettingsWidgetState extends State<SettingWidget> {
     return Scaffold(
       backgroundColor: Color(0xFFFEF9FF),
       appBar: AppBar(
-        title: Text("Settings"),
+        title: Text(Strings.settings[lang]),
       ),
       body: Center(
         child: Column(
@@ -30,7 +31,7 @@ class SettingsWidgetState extends State<SettingWidget> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  "Notification enabled",
+                  Strings.notificationEnabled[lang],
                   style: TextStyle(
                     fontSize: 18,
                   ),
@@ -54,7 +55,7 @@ class SettingsWidgetState extends State<SettingWidget> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  "Next notification will be at ",
+                  Strings.nextNotificationWillBeAt[lang],
                   style: TextStyle(
                     fontSize: 18,
                   ),
@@ -84,7 +85,7 @@ class SettingsWidgetState extends State<SettingWidget> {
                 FirebaseAuth.instance.signOut();
                 Navigator.pushAndRemoveUntil(context,MaterialPageRoute(builder: (context) => AuthorizationWindowWidget()),(Route<dynamic> route) => false,);
               },
-              child: Text("Exit account"),
+              child: Text(Strings.exitAccount[lang]),
               color: Colors.redAccent,
             ),
           ],

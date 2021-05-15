@@ -3,6 +3,7 @@ import 'package:qr_flutter/qr_flutter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:ui';
 import 'package:flutter/rendering.dart';
+import 'package:mind_tracker/main.dart';
 
 class GenerateScreen extends StatefulWidget {
 
@@ -19,7 +20,7 @@ class GenerateScreenState extends State<GenerateScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('My QR-code'),
+        title: Text(Strings.myQR[lang]),
         actions: <Widget>[
         ],
       ),

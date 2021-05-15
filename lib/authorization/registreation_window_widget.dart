@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mind_tracker/statistics/day_information_widget.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:mind_tracker/main.dart';
 import 'package:mind_tracker/home/home.dart';
 
 import 'auth_bloc.dart';
@@ -38,7 +38,7 @@ class RegistrationWindowWidgetState extends State<RegistrationWindowWidget> {
       child: Scaffold(
           resizeToAvoidBottomInset: true,
           backgroundColor: Color(0xFFE9DDF6),
-          appBar: AppBar(title: Text("Registration")),
+          appBar: AppBar(title: Text(Strings.register[lang])),
           body: Padding(
             padding:
             EdgeInsets.only(left: 60.0, top: 20.0, right: 60.0, bottom: 20.0),
@@ -66,7 +66,7 @@ class RegistrationWindowWidgetState extends State<RegistrationWindowWidget> {
                         controller: passwordController1,
                         obscureText: _passwordVisible,
                         decoration: new InputDecoration(
-                          labelText: "Password",
+                          labelText: Strings.password[lang],
                           //кнопка показа пароля
                           suffixIcon: IconButton(
                               icon: Icon(
@@ -88,7 +88,7 @@ class RegistrationWindowWidgetState extends State<RegistrationWindowWidget> {
                       //Поле пароля 2
                       TextFormField(
                         controller: nameController,
-                        decoration: new InputDecoration(labelText: "Your Name"),
+                        decoration: new InputDecoration(labelText: Strings.yourName[lang]),
                       ),
 
 
@@ -104,7 +104,7 @@ class RegistrationWindowWidgetState extends State<RegistrationWindowWidget> {
                           onPressed: () => OnRegister(context),
                           color: Color.fromARGB(255, 159, 159, 237),
                           minWidth: 200.0,
-                          child: Text("Register"),
+                          child: Text(Strings.register[lang]),
                         ),
                       ))
                 ],

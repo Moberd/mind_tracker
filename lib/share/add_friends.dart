@@ -9,7 +9,7 @@ import 'package:intl/intl.dart';
 import 'package:mind_tracker/Types/FriendsData.dart';
 import 'package:mind_tracker/settings_button_logic.dart';
 import 'package:mind_tracker/share/share_bloc.dart';
-
+import 'package:mind_tracker/main.dart';
 
 
 class RequestScreen extends StatelessWidget {
@@ -19,7 +19,7 @@ class RequestScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Add Friends"),
+        title: Text(Strings.addedFriends[lang]),
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,

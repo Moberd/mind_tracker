@@ -6,7 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:mind_tracker/authorization/auth_bloc.dart';
 import 'package:mind_tracker/share/friendlist/friend_pending_bloc/friend_pending_bloc.dart';
-
+import 'package:mind_tracker/main.dart';
 import '../generate_qr.dart';
 import '../share_bloc.dart';
 
@@ -17,7 +17,7 @@ class FriendListWindow extends StatelessWidget {
     final blocEmail = BlocProvider.of<AuthBloc>(context).email;
     return Scaffold(
       appBar: AppBar(
-        title: Text("Add Friends"),
+        title: Text(Strings.addFriends[lang]),
       ),
       body:BlocProvider<FriendPendingBloc>(
         create: (context){
@@ -34,7 +34,7 @@ class FriendListWindow extends StatelessWidget {
                   textFieldConfiguration: TextFieldConfiguration(
                       decoration: InputDecoration(
                           prefixIcon:Icon(Icons.search,size: 28,) ,
-                          labelText: "Enter friend's e-mail:"
+                          labelText: Strings.enterFriendsEmail[lang],
                       )
                   ),
                   suggestionsCallback: (pattern) async{
@@ -71,7 +71,7 @@ class FriendListWindow extends StatelessWidget {
                         onPressed: (){
 
                           scan(friendPendingBloc);},
-                        label: Text("Scan QR",style: TextStyle(fontSize: 20), ),
+                        label: Text(Strings.scanQR[lang],style: TextStyle(fontSize: 20), ),
                         icon: Icon(Icons.camera_alt_outlined,size: 34,)
                     ),
                     OutlinedButton.icon(
@@ -83,7 +83,7 @@ class FriendListWindow extends StatelessWidget {
                         Navigator.push(context,
                             MaterialPageRoute(builder: (context) => GenerateScreen()));
                       },
-                      label: Text("Share QR",style: TextStyle(fontSize: 20),),
+                      label: Text(Strings.shareQR[lang],style: TextStyle(fontSize: 20),),
                       icon: Icon(Icons.qr_code_outlined,size: 34),
                     ),
                   ],
@@ -102,7 +102,7 @@ class FriendListWindow extends StatelessWidget {
                               friendPendingBloc.add(LoadPendingEvent());
                             },
                             child: Text(
-                              "Pending friends",
+                              Strings.pendingFriends[lang],
                               style: TextStyle(
                                   fontSize: 16
                               ),
@@ -112,7 +112,7 @@ class FriendListWindow extends StatelessWidget {
                               friendPendingBloc.add(LoadAddedEvent());
                                },
                             child: Text(
-                              "Added friends",
+                              Strings.addFriends[lang],
                               style: TextStyle(
                                   color: Colors.grey,
                                   fontSize: 16
@@ -132,7 +132,7 @@ class FriendListWindow extends StatelessWidget {
                           friendPendingBloc.add(LoadPendingEvent());
                         },
                             child: Text(
-                              "Pending friends",
+                              Strings.pendingFriends[lang],
                               style: TextStyle(
                                   color: Colors.grey,
                                   fontSize: 16
@@ -142,7 +142,7 @@ class FriendListWindow extends StatelessWidget {
                           friendPendingBloc.add(LoadAddedEvent());
                         },
                             child: Text(
-                              "Added friends",
+                              Strings.addedFriends[lang],
                               style: TextStyle(
                                   fontSize: 16
                               ),

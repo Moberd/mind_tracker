@@ -12,6 +12,7 @@ import 'package:intl/intl.dart';
 import 'package:mind_tracker/authorization/auth_bloc.dart';
 import 'package:mind_tracker/rate_day/rate_day_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:mind_tracker/main.dart';
 //*основной экран где должен осуществляться ввод данных
 class MainWindowWidget extends StatefulWidget {
   @override
@@ -103,8 +104,9 @@ class HowAreYouText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(
-      "How are you today?",
+      Strings.howAreYouToday[lang],
       style: TextStyle(color: Colors.deepPurple, fontSize: 40),
+      textAlign: TextAlign.center,
     );
   }
 }
@@ -132,7 +134,7 @@ class _ThoughtsListState extends State<ThoughtsList> {
                      BlocProvider.of<RateDayBloc>(context).add(RateDayDelete(i,thoughts ));
                      ScaffoldMessenger
                         .of(context)
-                         .showSnackBar(SnackBar(content: Text("Thought deleted")));
+                         .showSnackBar(SnackBar(content: Text(Strings.thoughtDeleted[lang])));
 
                     },
                     child: Opacity(
@@ -167,7 +169,7 @@ class _ThoughtBoxContainerState extends State<ThoughtBoxContainer> {
   Widget build(BuildContext context) {
     return TextFormField(
       decoration: InputDecoration(
-        labelText: 'Your thoughts today',
+        labelText: Strings.yourThoughtsToday[lang],
         border: OutlineInputBorder(),
       ),
       controller: _controller,
