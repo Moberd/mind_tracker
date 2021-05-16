@@ -148,7 +148,7 @@ class _FriendsListState extends State<FriendsList> {
       elevation: 1,
       children: _buildPanels(list),
     );
-    return widget == null?Text("ПРивет"):widget;
+    return widget == null?Text("Привет"):widget;
   }
 
   List<ExpansionPanelRadio> _buildPanels(List<FriendsData> list)
