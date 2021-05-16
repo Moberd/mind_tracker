@@ -53,7 +53,7 @@ dev_dependencies:
 
 
 flutter_icons:
-  image_path: "assets/mindtracker_icon.png" 
+  image_path: "assets/logo_dark.png" 
   android: true
   ios: true
 
@@ -64,4 +64,5 @@ flutter:
   - assets/meditation_3.gif
   - assets/logo.jpg
   - assets/logo.png
+  - assets/logo_dark.png
   uses-material-design: true
