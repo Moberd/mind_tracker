@@ -61,6 +61,8 @@ class FriendPendingBloc extends Bloc<FriendPendingEvent, FriendPendingState> {
     if(event is DeclineFriendRequestEvent){
       final doc =  fr.collection("users_friends").doc(email);
       await doc.update({"pending":FieldValue.arrayRemove([event.email])});
+      final friendDoc = fr.collection('users_friends').doc(event.email);
+      friendDoc.update({"pending":FieldValue.arrayRemove([email])});
       add(LoadPendingEvent());
     }
     if(event is AcceptFriendRequestEvent){
@@ -69,6 +71,7 @@ class FriendPendingBloc extends Bloc<FriendPendingEvent, FriendPendingState> {
       doc.update({"friends":FieldValue.arrayUnion([event.email])},);
       final friendDoc = fr.collection('users_friends').doc(event.email);
       friendDoc.update({"friends":FieldValue.arrayUnion([email])},);
+      friendDoc.update({"pending":FieldValue.arrayRemove([email])});
       add(LoadPendingEvent());
     }
   }

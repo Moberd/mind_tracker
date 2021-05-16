@@ -60,8 +60,9 @@ class ShareBloc extends Bloc<ShareEvent, ShareState> {
 
   Stream<ShareState> mapInitToState() async* {
     streamSubscription?.cancel();
-    var a = await (createStream().first);
-    streamSubscription = a.listen((friendsList) {
+
+    streamSubscription = createStream().listen((future)async {
+      final friendsList = await future;
       print(friendsList);
       if (friendsList.isEmpty) {
         add(ShareLoadNoFriends());
@@ -71,45 +72,48 @@ class ShareBloc extends Bloc<ShareEvent, ShareState> {
     });
   }
 
-  Stream<Stream<List<FriendsData>>> createStream() {
-    return fr
+  Stream<Future<List<FriendsData>>> createStream() {
+    final stream = fr
         .collection("users_friends")
         .where("friends", arrayContainsAny: [email])
         .snapshots()
-        .map((snapshot) async* {
-          List<FriendsData> data = [];
-          for (DocumentSnapshot doc in snapshot.docs) {
-            if (doc.data()["lastmark"] == "") {
-              data.add(
-                  new FriendsData("01-01-1969", doc.data()["name"], 500, null));
-            } else {
-              print(doc.data());
-              var snapshot = await fr
-                  .collection("users")
-                  .doc(doc.data()["id"])
-                  .collection("days")
-                  .get();
-              TimeSeriesChart res = null;
-              if (snapshot == null || snapshot.docs == null) {
-                res = null;
-              } else {
-                Map<DateTime, BaseData> thoughts = {};
-                for (DocumentSnapshot doc in snapshot.docs) {
-                  final ddMMyyyy = doc.id.split("-");
-                  final int mark = (doc.data()["mark"] ?? -1);
-                  final date = new DateTime(int.parse(ddMMyyyy[2]),
-                      int.parse(ddMMyyyy[1]), int.parse(ddMMyyyy[0]));
-                  thoughts[date] = new BaseData(date, null, mark);
-                }
-                res = TimeSeriesChart(GetChartsData(thoughts, DateTime.now()));
-                res.createState();
-              }
-              data.add(new FriendsData(doc.data()["lastvisited"],
-                  doc.data()["name"], doc.data()["lastmark"], res));
-            }
+        .map((snapshot)async {
+      List<FriendsData> data = [];
+      for (DocumentSnapshot doc in snapshot.docs) {
+        if (doc.data()["lastmark"] == "") {
+          data.add(
+              new FriendsData("01-01-1969", doc.data()["name"], 500, null));
+        }
+        else {
+          print(doc.data());
+          var snapshot = await fr
+              .collection("users")
+              .doc(doc.data()["id"])
+              .collection("days")
+              .get();
+          TimeSeriesChart res = null;
+          if (snapshot == null || snapshot.docs == null) {
+            res = null;
           }
-          yield data;
-        });
+          else {
+            Map<DateTime, BaseData> thoughts = {};
+            for (DocumentSnapshot doc in snapshot.docs) {
+              final ddMMyyyy = doc.id.split("-");
+              final int mark = (doc.data()["mark"] ?? -1);
+              final date = new DateTime(int.parse(ddMMyyyy[2]),
+                  int.parse(ddMMyyyy[1]), int.parse(ddMMyyyy[0]));
+              thoughts[date] = new BaseData(date, null, mark);
+            }
+            res = TimeSeriesChart(GetChartsData(thoughts, DateTime.now()));
+            res.createState();
+          }
+          data.add(new FriendsData(doc.data()["lastvisited"],
+              doc.data()["name"], doc.data()["lastmark"], res));
+        }
+      }
+      return data;
+    });
+    return stream;
   }
 
   SplayTreeMap<DateTime, List<FriendsData>> generateMap(
