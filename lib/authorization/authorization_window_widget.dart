@@ -8,6 +8,7 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:mind_tracker/home/home.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mind_tracker/main.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class AuthorizationWindowWidget extends StatefulWidget {
   @override
@@ -28,14 +29,15 @@ class AuthorizationWindowWidgetState extends State<AuthorizationWindowWidget> {
 
   Widget build(BuildContext context) {
     print(BlocProvider.of<AuthBloc>(context).email);
-   return BlocListener<AuthBloc,AuthState>(
-      listener: (context,state){
+    return BlocListener<AuthBloc, AuthState>(
+      listener: (context, state) {
         print(state);
-        if(state is AuthAuthenticated){
-          Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
+        if (state is AuthAuthenticated) {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => Home()));
         }
       },
-      child:WillPopScope(
+      child: WillPopScope(
           onWillPop: () async {
             return false;
           },
@@ -100,7 +102,7 @@ class AuthorizationWindowWidgetState extends State<AuthorizationWindowWidget> {
                           shape: RoundedRectangleBorder(
                               side: BorderSide(color: Colors.transparent),
                               borderRadius:
-                              BorderRadius.all(Radius.circular(10.0))),
+                                  BorderRadius.all(Radius.circular(10.0))),
                         )
                       ],
                     ),
@@ -126,9 +128,10 @@ class AuthorizationWindowWidgetState extends State<AuthorizationWindowWidget> {
                                   onPressed: () => onRegister(context),
                                   textColor: Colors.grey,
                                   shape: RoundedRectangleBorder(
-                                      side: BorderSide(color: Colors.transparent),
-                                      borderRadius:
-                                      BorderRadius.all(Radius.circular(10.0))),
+                                      side:
+                                          BorderSide(color: Colors.transparent),
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(10.0))),
                                 )
                               ],
                             )))
@@ -136,19 +139,29 @@ class AuthorizationWindowWidgetState extends State<AuthorizationWindowWidget> {
                 ),
               ),
             ),
-          )) ,
+          )),
     );
   }
+
   void onForgotPassword() {
-    auth.sendPasswordResetEmail(email: loginController.text);
+    if (loginController.text.length == 0) {
+      Fluttertoast.showToast(
+          msg: Strings.empty_email[lang], backgroundColor: Colors.red);
+    } else {
+      auth.sendPasswordResetEmail(email: loginController.text);
+      Fluttertoast.showToast(msg: Strings.sent_email[lang], backgroundColor: Colors.green);
+    }
   }
+
   static void onRegister(BuildContext context) {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => RegistrationWindowWidget()),
     );
   }
+
   void onLogin(BuildContext context) async {
-    BlocProvider.of<AuthBloc>(context).add(AuthEventLogin(loginController.text, passwordController.text));
+    BlocProvider.of<AuthBloc>(context)
+        .add(AuthEventLogin(loginController.text, passwordController.text));
   }
 }

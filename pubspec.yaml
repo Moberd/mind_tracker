@@ -26,6 +26,7 @@ dependencies:
   rxdart: ^0.26.0
   flutter_bloc: ^7.0.0
   equatable: ^2.0.0
+  fluttertoast: ^8.0.6
 
   flutter_calendar_carousel: ^1.5.3
 

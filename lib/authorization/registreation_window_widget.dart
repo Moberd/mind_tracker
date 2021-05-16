@@ -7,6 +7,7 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mind_tracker/main.dart';
 import 'package:mind_tracker/home/home.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import 'auth_bloc.dart';
 
@@ -40,8 +41,8 @@ class RegistrationWindowWidgetState extends State<RegistrationWindowWidget> {
           backgroundColor: Color(0xFFE9DDF6),
           appBar: AppBar(title: Text(Strings.register[lang])),
           body: Padding(
-            padding:
-            EdgeInsets.only(left: 60.0, top: 20.0, right: 60.0, bottom: 20.0),
+            padding: EdgeInsets.only(
+                left: 60.0, top: 20.0, right: 60.0, bottom: 20.0),
             child: SingleChildScrollView(
               reverse: true,
               child: Column(
@@ -73,9 +74,7 @@ class RegistrationWindowWidgetState extends State<RegistrationWindowWidget> {
                                 _passwordVisible
                                     ? Icons.visibility
                                     : Icons.visibility_off,
-                                color: Theme
-                                    .of(context)
-                                    .primaryColorDark,
+                                color: Theme.of(context).primaryColorDark,
                               ),
                               onPressed: () {
                                 setState(() {
@@ -84,17 +83,13 @@ class RegistrationWindowWidgetState extends State<RegistrationWindowWidget> {
                               }),
                         ),
                       ),
-
-                      //Поле пароля 2
                       TextFormField(
                         controller: nameController,
-                        decoration: new InputDecoration(labelText: Strings.yourName[lang]),
+                        decoration: new InputDecoration(
+                            labelText: Strings.yourName[lang]),
                       ),
-
-
                     ],
                   ),
-
                   //Кнопка авторизации
                   Padding(
                       padding: EdgeInsets.fromLTRB(10, 10, 10, 50),
@@ -113,7 +108,17 @@ class RegistrationWindowWidgetState extends State<RegistrationWindowWidget> {
           )),
     );
   }
-  void OnRegister(BuildContext context)async {
-    BlocProvider.of<AuthBloc>(context).add(AuthEventRegister(loginController.text, passwordController1.text,nameController.text));
+
+  void OnRegister(BuildContext context) async {
+    if (loginController.text.length == 0) {
+      Fluttertoast.showToast(
+          msg: Strings.empty_email[lang], backgroundColor: Colors.red);
+    } else if (passwordController1.text.length <= 6) {
+      Fluttertoast.showToast(
+          msg: Strings.weak_password[lang], backgroundColor: Colors.red);
+    } else {
+      BlocProvider.of<AuthBloc>(context).add(AuthEventRegister(
+          loginController.text, passwordController1.text, nameController.text));
+    }
   }
 }
