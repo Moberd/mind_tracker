@@ -29,8 +29,10 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
             .where('id', isLessThan: limit)
             .get();
         for(final doc in snap.docs){
+          final pending = new List<String>.from(doc.data()["pending"]??[]);
+          final friends = new List<String>.from(doc.data()["friends"]??[]);
 
-          if(!((doc.data()["id"] as String) == email))
+          if(!((doc.data()["id"] as String) == email) && !pending.contains(email) && !friends.contains(email))
             result.add((doc.data()["id"]));
         }
           yield SearchLoaded(result);
