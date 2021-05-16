@@ -34,6 +34,7 @@ class _FriendsListState extends State<FriendsList> {
   final _mainFont =
       TextStyle(fontSize: 24.0, color: Color.fromRGBO(0, 0, 0, 1));
   final _dateFont = TextStyle(fontSize: 24.0, color: Colors.deepPurple);
+  int _initial=0;
 
 
   Widget build(BuildContext context) {
@@ -111,8 +112,7 @@ class _FriendsListState extends State<FriendsList> {
 
   }
 
-
-  Widget _buildList(SplayTreeMap<DateTime, List<FriendsData>> map) {
+  Widget _buildList(SplayTreeMap<DateTime, List<FriendsData>> map)  {
     return ListView.builder(
         itemCount: map.length,
         itemBuilder: (context, i) {
@@ -127,23 +127,41 @@ class _FriendsListState extends State<FriendsList> {
                     title: Text(
                         Strings.lastVisit[lang]+formatted,
                         style: _dateFont)),
-                subtitle: _buildRows(map[map.keys.elementAt(i)])),
-          );
+                subtitle: FutureBuilder<Widget>(
+                  initialData: Center(child: CircularProgressIndicator(),),
+                  future: _buildRows(map[map.keys.elementAt(i)]),
+                  builder: (BuildContext context,AsyncSnapshot<Widget> snapshot) {
+                    return snapshot.data;
+                  },
+                ),
+          ));
         });
   }
 
-  Widget _buildRows(List<FriendsData> list) {
+
+  Future<Widget> _buildRows(List<FriendsData> list)async {
     print(list.toString());
-    return ListView.builder(
-        physics: ScrollPhysics(),
-        shrinkWrap: true,
-        itemCount: list.length,
-        itemBuilder: (context, i) {
-          return buildFriendTile(list[i]);
-        });
+    print("--------------------------");
+    Widget widget = ExpansionPanelList.radio(
+      initialOpenPanelValue: _initial,
+      animationDuration: Duration(seconds: 2),
+      elevation: 1,
+      children: _buildPanels(list),
+    );
+    return widget == null?Text("ПРивет"):widget;
   }
 
-  Widget buildFriendTile(FriendsData friend) {
+  List<ExpansionPanelRadio> _buildPanels(List<FriendsData> list)
+  {
+    print("building");
+    var l= List<ExpansionPanelRadio>.generate(list.length, (index) {
+      return buildFriendTile(list[index],index);
+    });
+    print(l==null);
+    return l;
+  }
+
+  ExpansionPanelRadio buildFriendTile(FriendsData friend,int index) {
     Icon i;
     switch ((friend.mood/100).round()) {
       case 0:
@@ -181,16 +199,23 @@ class _FriendsListState extends State<FriendsList> {
         break;
       default:
     }
-    return Card(
-      child: ListTile(
-        title: Text(
-          friend.friendName,
-          style: _mainFont,
-        ),
-        trailing: i,
-      ),
+    var w = ExpansionPanelRadio(
+      value: index,
+     headerBuilder: (context, isExpanded) {
+       return ListTile(
+         title: Text(
+           friend.friendName,
+           style: _mainFont,
+         ),
+         trailing: i,
+       );
+     },
+      body: Text("Привет"),
     );
+    return w;
   }
+
+
 
   Future scan(BuildContext context) async {
     try {
