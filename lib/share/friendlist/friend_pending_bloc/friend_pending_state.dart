@@ -12,6 +12,10 @@ class PendingLoadedState extends FriendPendingState{
 }
 class AddedLoadedState extends FriendPendingState{
   final List<String> emails;
-
   AddedLoadedState(this.emails);
+}
+class ShowSnackBarState extends FriendPendingState{
+  final String message;
+
+  ShowSnackBarState(this.message);
 }

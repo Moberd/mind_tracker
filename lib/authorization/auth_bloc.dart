@@ -54,7 +54,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         }
        await FirebaseFirestore.instance.collection("users_friends").
         doc(email).
-        set({"friends":[],"lastvisited":"","lastmark":"", "name":name,"pending":[]})
+        set({"id":email,"friends":[],"lastvisited":"","lastmark":"", "name":name,"pending":[]})
            .then((value) => print("User Added"))
            .catchError((error) => print("Failed to add user: $error"));
 

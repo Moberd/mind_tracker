@@ -1,7 +1,8 @@
 part of 'friend_pending_bloc.dart';
 
 @immutable
-abstract class FriendPendingEvent {}
+abstract class FriendPendingEvent {
+}
 
 class AddFriendEvent extends FriendPendingEvent{
   final String email;
@@ -21,7 +22,7 @@ class AcceptFriendRequestEvent extends FriendPendingEvent{
 class DeclineFriendRequestEvent extends FriendPendingEvent{
   final String email;
 
-  DeclineFriendRequestEvent(this.email);
+  DeclineFriendRequestEvent(this.email,);
 }
 class LoadPendingEvent extends FriendPendingEvent{}
 class LoadAddedEvent extends FriendPendingEvent{}
