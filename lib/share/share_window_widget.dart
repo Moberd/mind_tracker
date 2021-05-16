@@ -86,7 +86,7 @@ class _FriendsListState extends State<FriendsList> {
                         },
                       ),
                       IconButton(
-                        icon: Icon(Icons.account_box),
+                        icon: Icon(Icons.person_search),
                         color: Colors.black,
                         iconSize: 40,
                         onPressed: () => Navigator.push(
@@ -213,8 +213,8 @@ class _FriendsListState extends State<FriendsList> {
                 height: 0.0,
               )
             : Container(
-                width: 400.0,
-                height: 400.0,
+                width: 300.0,
+                height: 300.0,
                 child: friend.timeSeriesChart,
               )
     );

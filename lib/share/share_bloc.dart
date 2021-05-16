@@ -101,7 +101,6 @@ class ShareBloc extends Bloc<ShareEvent, ShareState> {
                       int.parse(ddMMyyyy[1]), int.parse(ddMMyyyy[0]));
                   thoughts[date] = new BaseData(date, null, mark);
                 }
-                print(thoughts);
                 res = TimeSeriesChart(GetChartsData(thoughts, DateTime.now()));
                 res.createState();
               }
