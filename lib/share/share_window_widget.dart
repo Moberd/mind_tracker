@@ -1,18 +1,20 @@
 import 'dart:collection';
 
 import 'package:barcode_scan_fix/barcode_scan.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:mind_tracker/Types/FriendsData.dart';
 import 'package:mind_tracker/authorization/auth_bloc.dart';
+import 'package:mind_tracker/authorization/authorization_window_widget.dart';
 import 'package:mind_tracker/main.dart';
 import 'package:mind_tracker/settings/settings_button_logic.dart';
 import 'package:mind_tracker/share/friendlist/friend_list_widget.dart';
 import 'package:mind_tracker/share/share_bloc.dart';
-
 class FriendsList extends StatefulWidget {
   const FriendsList({Key key}) : super(key: key);
 
@@ -38,6 +40,36 @@ class _FriendsListState extends State<FriendsList> {
       child: BlocBuilder<ShareBloc, ShareState>(
         builder: (context, state) {
           if (state is ShareLoaded) {
+            if(kIsWeb){
+              return Scaffold(
+                  backgroundColor: Color(0xFFFEF9FF),
+                  appBar: AppBar(
+                      automaticallyImplyLeading: false,
+                      toolbarHeight: 60,
+                      backgroundColor: Colors.white,
+                      title: Text(state.name, style: _titleFont),
+                      actions: <Widget>[
+                        IconButton(
+                          icon: Icon(Icons.logout),
+                          color: Colors.black,
+                          iconSize: 40,
+                          onPressed: () {
+                            FirebaseAuth.instance.signOut();
+                            Navigator.pushAndRemoveUntil(context,MaterialPageRoute(builder: (context) => AuthorizationWindowWidget()),(Route<dynamic> route) => false,);
+                          },
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.person_search),
+                          color: Colors.black,
+                          iconSize: 40,
+                          onPressed: () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => FriendListWindow())),
+                        ),
+                      ]),
+                  body: _buildList(state.friends));
+            }
             return Scaffold(
                 backgroundColor: Color(0xFFFEF9FF),
                 appBar: AppBar(
@@ -68,6 +100,41 @@ class _FriendsListState extends State<FriendsList> {
                 body: _buildList(state.friends));
           }
           if (state is ShareLoadedNoFriends) {
+            if(kIsWeb){
+              return Scaffold(
+                  backgroundColor: Color(0xFFFEF9FF),
+                  appBar: AppBar(
+                      automaticallyImplyLeading: false,
+                      toolbarHeight: 60,
+                      backgroundColor: Colors.white,
+                      title: Text(state.name, style: _titleFont),
+                      actions: <Widget>[
+                        IconButton(
+                          icon: Icon(Icons.logout),
+                          color: Colors.black,
+                          iconSize: 40,
+                          onPressed: () {
+                            FirebaseAuth.instance.signOut();
+                            Navigator.pushAndRemoveUntil(context,MaterialPageRoute(builder: (context) => AuthorizationWindowWidget()),(Route<dynamic> route) => false,);
+                          },
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.person_search),
+                          color: Colors.black,
+                          iconSize: 40,
+                          onPressed: () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => FriendListWindow())),
+                        ),
+                      ]),
+                  body: Center(
+                      child: Text(
+                        Strings.useQRToAddNewFriends[lang],
+                        style: _mainFont,
+                        textAlign: TextAlign.center,
+                      )));
+            }
             return Scaffold(
                 backgroundColor: Color(0xFFFEF9FF),
                 appBar: AppBar(
@@ -109,7 +176,10 @@ class _FriendsListState extends State<FriendsList> {
       ),
     );
   }
-
+  AppBar genAppBar(ShareState state){
+    return AppBar(
+    );
+  }
   Widget _buildList(SplayTreeMap<DateTime, List<FriendsData>> map) {
     return ListView.builder(
         itemCount: map.length,

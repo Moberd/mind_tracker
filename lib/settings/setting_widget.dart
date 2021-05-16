@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:mind_tracker/authorization/authorization_window_widget.dart';
 import 'package:mind_tracker/settings/settings_logic.dart';
 import 'package:mind_tracker/main.dart';
-
+import 'package:flutter/foundation.dart' show kIsWeb;
 class SettingWidget extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
