@@ -1,51 +1,43 @@
 import 'dart:collection';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
+import 'package:barcode_scan_fix/barcode_scan.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:barcode_scan_fix/barcode_scan.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:mind_tracker/Types/FriendsData.dart';
 import 'package:mind_tracker/authorization/auth_bloc.dart';
+import 'package:mind_tracker/main.dart';
 import 'package:mind_tracker/settings/settings_button_logic.dart';
 import 'package:mind_tracker/share/friendlist/friend_list_widget.dart';
-import 'package:mind_tracker/share/generate_qr.dart';
 import 'package:mind_tracker/share/share_bloc.dart';
-import 'package:mind_tracker/share/add_friends.dart';
-import 'package:mind_tracker/main.dart';
-class FriendsList extends StatefulWidget {
-  
-  
 
+class FriendsList extends StatefulWidget {
   const FriendsList({Key key}) : super(key: key);
+
   @override
   _FriendsListState createState() => _FriendsListState();
 }
 
 class _FriendsListState extends State<FriendsList> {
-
   final SettingButtonBloc _bloc = new SettingButtonBloc();
   final _titleFont =
       TextStyle(fontSize: 30.0, color: Color.fromRGBO(0, 0, 0, 1));
   final _mainFont =
       TextStyle(fontSize: 24.0, color: Color.fromRGBO(0, 0, 0, 1));
   final _dateFont = TextStyle(fontSize: 24.0, color: Colors.deepPurple);
-  int _initial=0;
-
+  int _initial = 0;
 
   Widget build(BuildContext context) {
     final blocEmail = BlocProvider.of<AuthBloc>(context).email;
     return BlocProvider<ShareBloc>(
-      create: (context){
+      create: (context) {
         return ShareBloc(blocEmail)..add(ShareInit());
       },
-      child: BlocBuilder<ShareBloc,ShareState>(
-        builder: (context,state){
-          if(state is ShareLoaded){
+      child: BlocBuilder<ShareBloc, ShareState>(
+        builder: (context, state) {
+          if (state is ShareLoaded) {
             return Scaffold(
                 backgroundColor: Color(0xFFFEF9FF),
                 appBar: AppBar(
@@ -58,7 +50,10 @@ class _FriendsListState extends State<FriendsList> {
                         icon: Icon(Icons.settings),
                         color: Colors.black,
                         iconSize: 40,
-                        onPressed: () => {_bloc.statisticPageEventSink.add(new StartSettingsPageEvent(context: context))},
+                        onPressed: () => {
+                          _bloc.statisticPageEventSink
+                              .add(new StartSettingsPageEvent(context: context))
+                        },
                       ),
                       IconButton(
                         icon: Icon(Icons.person_search),
@@ -72,7 +67,7 @@ class _FriendsListState extends State<FriendsList> {
                     ]),
                 body: _buildList(state.friends));
           }
-          if(state is ShareLoadedNoFriends){
+          if (state is ShareLoadedNoFriends) {
             return Scaffold(
                 backgroundColor: Color(0xFFFEF9FF),
                 appBar: AppBar(
@@ -85,7 +80,10 @@ class _FriendsListState extends State<FriendsList> {
                         icon: Icon(Icons.settings),
                         color: Colors.black,
                         iconSize: 40,
-                        onPressed: () => {_bloc.statisticPageEventSink.add(new StartSettingsPageEvent(context: context))},
+                        onPressed: () => {
+                          _bloc.statisticPageEventSink
+                              .add(new StartSettingsPageEvent(context: context))
+                        },
                       ),
                       IconButton(
                         icon: Icon(Icons.account_box),
@@ -99,47 +97,48 @@ class _FriendsListState extends State<FriendsList> {
                     ]),
                 body: Center(
                     child: Text(
-                      Strings.useQRToAddNewFriends[lang],
-                      style: _mainFont,
-                      textAlign: TextAlign.center,
-                    )));
+                  Strings.useQRToAddNewFriends[lang],
+                  style: _mainFont,
+                  textAlign: TextAlign.center,
+                )));
           }
-          return Center(child: CircularProgressIndicator(),);
+          return Center(
+            child: CircularProgressIndicator(),
+          );
         },
       ),
-
     );
-
   }
 
-  Widget _buildList(SplayTreeMap<DateTime, List<FriendsData>> map)  {
+  Widget _buildList(SplayTreeMap<DateTime, List<FriendsData>> map) {
     return ListView.builder(
         itemCount: map.length,
         itemBuilder: (context, i) {
           final DateFormat formatter = DateFormat('dd-MM-yyyy');
           final String formatted = formatter.format(map.keys.elementAt(i));
           return Container(
-            decoration: BoxDecoration(
-              color: Color(0xFFFEF9FF),
-            ),
-            child: ListTile(
+              decoration: BoxDecoration(
+                color: Color(0xFFFEF9FF),
+              ),
+              child: ListTile(
                 title: ListTile(
-                    title: Text(
-                        Strings.lastVisit[lang]+formatted,
+                    title: Text(Strings.lastVisit[lang] + formatted,
                         style: _dateFont)),
                 subtitle: FutureBuilder<Widget>(
-                  initialData: Center(child: CircularProgressIndicator(),),
+                  initialData: Center(
+                    child: CircularProgressIndicator(),
+                  ),
                   future: _buildRows(map[map.keys.elementAt(i)]),
-                  builder: (BuildContext context,AsyncSnapshot<Widget> snapshot) {
+                  builder:
+                      (BuildContext context, AsyncSnapshot<Widget> snapshot) {
                     return snapshot.data;
                   },
                 ),
-          ));
+              ));
         });
   }
 
-
-  Future<Widget> _buildRows(List<FriendsData> list)async {
+  Future<Widget> _buildRows(List<FriendsData> list) async {
     print(list.toString());
     print("--------------------------");
     Widget widget = ExpansionPanelList.radio(
@@ -148,22 +147,21 @@ class _FriendsListState extends State<FriendsList> {
       elevation: 1,
       children: _buildPanels(list),
     );
-    return widget == null?Text("Привет"):widget;
+    return widget == null ? Text("ПРивет") : widget;
   }
 
-  List<ExpansionPanelRadio> _buildPanels(List<FriendsData> list)
-  {
+  List<ExpansionPanelRadio> _buildPanels(List<FriendsData> list) {
     print("building");
-    var l= List<ExpansionPanelRadio>.generate(list.length, (index) {
-      return buildFriendTile(list[index],index);
+    var l = List<ExpansionPanelRadio>.generate(list.length, (index) {
+      return buildFriendTile(list[index], index);
     });
-    print(l==null);
+    print(l == null);
     return l;
   }
 
-  ExpansionPanelRadio buildFriendTile(FriendsData friend,int index) {
+  ExpansionPanelRadio buildFriendTile(FriendsData friend, int index) {
     Icon i;
-    switch ((friend.mood/100).round()) {
+    switch ((friend.mood / 100).round()) {
       case 0:
         i = Icon(Icons.mood_bad_outlined, color: Colors.deepPurple);
         break;
@@ -200,22 +198,28 @@ class _FriendsListState extends State<FriendsList> {
       default:
     }
     var w = ExpansionPanelRadio(
-      value: index,
-     headerBuilder: (context, isExpanded) {
-       return ListTile(
-         title: Text(
-           friend.friendName,
-           style: _mainFont,
-         ),
-         trailing: i,
-       );
-     },
-      body: Text("Привет"),
-    );
+        value: index,
+        headerBuilder: (context, isExpanded) {
+          return ListTile(
+            title: Text(
+              friend.friendName,
+              style: _mainFont,
+            ),
+            trailing: i,
+          );
+        },
+        body: friend.timeSeriesChart == null
+            ? Container(
+                width: 0.0,
+                height: 0.0,
+              )
+            : Container(
+        width: 100.0,
+          height: 100.0,
+          child: friend.timeSeriesChart,
+    ));
     return w;
   }
-
-
 
   Future scan(BuildContext context) async {
     try {
@@ -233,6 +237,4 @@ class _FriendsListState extends State<FriendsList> {
       setState(() => {});
     }
   }
-
 }
-
