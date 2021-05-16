@@ -101,7 +101,8 @@ class ShareBloc extends Bloc<ShareEvent, ShareState> {
                       int.parse(ddMMyyyy[1]), int.parse(ddMMyyyy[0]));
                   thoughts[date] = new BaseData(date, null, mark);
                 }
-                res = TimeSeriesChart(GetChartsData(thoughts,DateTime.now()));
+                print(thoughts);
+                res = TimeSeriesChart(GetChartsData(thoughts, DateTime.now()));
                 res.createState();
               }
               data.add(new FriendsData(doc.data()["lastvisited"],
@@ -123,11 +124,11 @@ class ShareBloc extends Bloc<ShareEvent, ShareState> {
       final date = new DateFormat("dd-MM-yyy").parse(friend.dates);
       if (result[date] != null) {
         t = result[date];
-        t.add(new FriendsData(
-            friend.dates, friend.friendName, friend.mood, friend.timeSeriesChart));
+        t.add(new FriendsData(friend.dates, friend.friendName, friend.mood,
+            friend.timeSeriesChart));
       } else {
-        t.add(new FriendsData(
-            friend.dates, friend.friendName, friend.mood, friend.timeSeriesChart));
+        t.add(new FriendsData(friend.dates, friend.friendName, friend.mood,
+            friend.timeSeriesChart));
       }
       result[date] = t;
     }
@@ -144,10 +145,10 @@ class ShareBloc extends Bloc<ShareEvent, ShareState> {
       Map<DateTime, BaseData> map, DateTime day) {
     List<TimeSeriesSales> res = [];
     map.keys.forEach((element) {
-      if (element.year == day.year && element.month == day.month)
-        if (map[element].mark >=0) {
-          res.add(new TimeSeriesSales(element, map[element].mark));
-        }
+      if (element.year == day.year &&
+          element.month == day.month) if (map[element].mark >= 0) {
+        res.add(new TimeSeriesSales(element, map[element].mark));
+      }
     });
     print(res.length);
     if (res.length == 0) {

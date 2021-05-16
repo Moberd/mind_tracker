@@ -142,12 +142,11 @@ class _FriendsListState extends State<FriendsList> {
     print(list.toString());
     print("--------------------------");
     Widget widget = ExpansionPanelList.radio(
-      initialOpenPanelValue: _initial,
-      animationDuration: Duration(seconds: 2),
+      animationDuration: Duration(milliseconds: 500),
       elevation: 1,
       children: _buildPanels(list),
     );
-    return widget == null ? Text("ПРивет") : widget;
+    return widget == null ? Text("Привет") : widget;
   }
 
   List<ExpansionPanelRadio> _buildPanels(List<FriendsData> list) {
@@ -214,10 +213,11 @@ class _FriendsListState extends State<FriendsList> {
                 height: 0.0,
               )
             : Container(
-        width: 100.0,
-          height: 100.0,
-          child: friend.timeSeriesChart,
-    ));
+                width: 400.0,
+                height: 400.0,
+                child: friend.timeSeriesChart,
+              )
+    );
     return w;
   }
 
