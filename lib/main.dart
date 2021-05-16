@@ -105,6 +105,8 @@ class Strings {
   static const List<String> empty_password = ["Password is empty", "Полe пароля пусто"];
   static const List<String> weak_password = ["Password is too weak(at least 6 characters)", "Слишком слабый пароль(минимум 6 символов)"];
   static const List<String> sent_email = ["Email is sent", "На почту было отправлено письмо"];
+  static const List<String> notification = ["Don`t forget to fill the day!", "Не забудь зайти в приложение!"];
+
 }
 
 

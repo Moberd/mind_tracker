@@ -106,8 +106,8 @@ class SettingsLogic {
         ),
         iOS: IOSNotificationDetails());
     var nextTime = _nextInstance(time);
-    await notifications.zonedSchedule(0, "Your mood",
-        "Don't forget to fill the days!", nextTime, notificationDetails,
+    await notifications.zonedSchedule(0, Strings.howAreYouToday[lang],
+        Strings.notification[lang], nextTime, notificationDetails,
         androidAllowWhileIdle: true,
         uiLocalNotificationDateInterpretation:
             UILocalNotificationDateInterpretation.absoluteTime,
